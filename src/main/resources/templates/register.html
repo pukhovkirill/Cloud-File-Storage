@@ -22,11 +22,11 @@
 <body>
     <div class="container w-50 form-center">
         <h4 class="mb-3">Registration</h4>
-        <form class="needs-validation" novalidate="">
+        <form th:action="@{/register}" th:method="post" th:object="${person}" class="needs-validation" novalidate="">
             <div class="row g-3">
                 <div class="col-sm-6">
                     <label for="firstName" class="form-label">First name<span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="firstName" placeholder="" value="" required="">
+                    <input th:field="*{firstName}" type="text" class="form-control" id="firstName" placeholder="" value="" required="">
                     <div class="invalid-feedback">
                         Valid first name is required.
                     </div>
@@ -34,7 +34,7 @@
 
                 <div class="col-sm-6">
                     <label for="lastName" class="form-label">Last name<span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="lastName" placeholder="" value="" required="">
+                    <input th:field="*{lastName}" type="text" class="form-control" id="lastName" placeholder="" value="" required="">
                     <div class="invalid-feedback">
                         Valid last name is required.
                     </div>
@@ -42,7 +42,7 @@
 
                 <div class="col-12">
                     <label for="email" class="form-label">Email<span class="text-danger">*</span></label>
-                    <input type="email" class="form-control" id="email" placeholder="you@example.com">
+                    <input th:field="*{email}" type="email" class="form-control" id="email" placeholder="you@example.com">
                     <div class="invalid-feedback">
                         Please enter a valid email address for shipping updates.
                     </div>
@@ -50,7 +50,7 @@
 
                 <div class="col-12">
                     <label for="phone" class="form-label">Phone</label>
-                    <input type="text" class="form-control" id="phone" placeholder="+79092159139" required="">
+                    <input th:field="*{phone}" type="text" class="form-control" id="phone" placeholder="" required="">
                     <div class="invalid-feedback">
                         Please enter your shipping address.
                     </div>
@@ -58,11 +58,11 @@
 
                 <div class="col-12">
                     <label for="password" class="form-label">Password<span class="text-danger">*</span></label>
-                    <input type="password" class="form-control" id="password">
+                    <input th:field="*{password}" type="password" class="form-control" id="password">
                 </div>
             </div>
 
-            <button class="w-100 btn btn-lg text-white mt-5" style="background-color: #22A699" type="submit">Register</button>
+            <input class="w-100 btn btn-lg text-white mt-5" style="background-color: #22A699" type="submit" value="Register">
             <hr class="my-4">
             <p class="text-secondary text-center mt-4">Already have an account -<a th:href="@{/login}" class="link-info px-2" >Sign in</a></p>
         </form>
