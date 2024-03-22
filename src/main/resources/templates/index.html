@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Welcome</title>
     <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.css" th:href="@{/css/bootstrap.css}">
     <script src="/static/js/bootstrap.js" type="text/javascript" th:src="@{/js/boostrap.js}"></script>
 </head>
@@ -10,7 +10,7 @@
     <div class="container">
         <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
             <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-                <img src="/img/drawing.svg" th:src="@{/img/drawing.svg}" alt="logo" width="40" height="40">
+                <img src="/static/img/drawing.svg" th:src="@{/img/drawing.svg}" alt="logo" width="40" height="40" loading="lazy">
                 <span class="fs-5 ms-2">Cloud Guardian</span>
             </a>
 
@@ -24,13 +24,13 @@
     <div class="container col-xxl-8 px-4 py-5">
         <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
             <div class="col-10 col-sm-8 col-lg-6">
-                <img src="/img/realistic_laptop_with_smartphone.jpg" th:src="@{/img/realistic_laptop_with_smartphone.jpg}" class="d-block mx-lg-auto img-fluid" alt="image" width="700" height="500">
+                <img src="/static/img/realistic_laptop_with_smartphone.jpg" th:src="@{/img/realistic_laptop_with_smartphone.jpg}" class="d-block mx-lg-auto img-fluid" alt="image" width="700" height="500">
             </div>
             <div class="col-lg-6">
                 <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Easy and secure access to your content</h1>
                 <p class="lead">The Cloud Guardian is a reliable protector and keeper of your files in the virtual realm. Capable of freeing you from the burden of local storage, it provides secure and convenient cloud storage.</p>
                 <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                    <button type="button" class="btn btn-lg px-4 me-md-2 text-white" style="background-color: #22A699">Get started</button>
+                    <a th:href="@{/login}" type="button" class="btn btn-lg px-4 me-md-2 text-white" style="background-color: #22A699">Get started</a>
                 </div>
             </div>
         </div>
