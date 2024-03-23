@@ -3,18 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>Welcome</title>
-    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.css" th:href="@{/css/bootstrap.css}">
-    <script src="/static/js/bootstrap.js" type="text/javascript" th:src="@{/js/boostrap.js}"></script>
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.css" th:href="@{css/bootstrap.css}">
+    <script src="/static/js/bootstrap.js" th:src="@{js/bootstrap.js}"></script>
 </head>
 <body>
     <div class="container">
         <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
             <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-                <img src="/static/img/drawing.svg" th:src="@{/img/drawing.svg}" alt="logo" width="40" height="40" loading="lazy">
+                <img src="/static/img/logo.svg" th:src="@{img/logo.svg}" alt="logo" width="40" height="40" loading="lazy">
                 <span class="fs-5 ms-2">Cloud Guardian</span>
             </a>
 
             <ul class="nav nav-pills">
+                <li class="nav-item"><a th:href="@{/register}" class="nav-link active" style="background-color: #22A699">Register</a></li>
                 <li class="nav-item"><a href="#" class="nav-link" style="color: #22A699">Features</a></li>
                 <li class="nav-item"><a href="#" class="nav-link" style="color: #22A699">FAQs</a></li>
                 <li class="nav-item"><a href="#" class="nav-link" style="color: #22A699">About</a></li>

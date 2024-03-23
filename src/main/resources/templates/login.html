@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
-    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.css" th:href="@{/css/bootstrap.css}">
-    <script src="/static/js/bootstrap.js" type="text/javascript" th:src="@{/js/boostrap.js}"></script>
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.css" th:href="@{css/bootstrap.css}">
+    <script src="/static/js/bootstrap.js" type="text/javascript" th:src="@{js/bootstrap.js}"></script>
     <style>
         html,
         body {
@@ -43,7 +43,7 @@
 
     <main class="form-signin w-100 m-auto">
         <form th:action="@{/login}" th:method="post">
-            <img class="mb-4" src="/static/img/drawing.svg" th:src="@{/img/drawing.svg}" alt="" width="60" height="60">
+            <img class="mb-4" src="/static/img/logo.svg" th:src="@{img/logo.svg}" alt="" width="60" height="60">
             <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
             <div class="form-floating">
