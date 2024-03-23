@@ -1,6 +1,7 @@
 package com.cfs.cloudfilestorage.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.internal.CustomizerRegistry;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -10,8 +11,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.FilterChainProxy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -35,13 +36,19 @@ public class SecurityConfig {
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/register").permitAll()
                         .requestMatchers("/css/**","/js/**","/img/**").permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/error")).permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/home")
+                        .defaultSuccessUrl("/")
                         .permitAll()
+                )
+                .logout(
+                        logout -> logout
+                                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                                .permitAll()
                 )
                 .rememberMe(Customizer.withDefaults());
 
