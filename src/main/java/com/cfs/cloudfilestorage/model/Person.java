@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Table(name = "person")
 @Entity
 @Data
@@ -16,12 +18,13 @@ public class Person {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(unique = true, nullable = false)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    @Column(nullable = false)
+    @Column(name = "last_name", nullable = false)
     private String lastName;
 
     @Column(unique = true, nullable = false)
@@ -32,4 +35,12 @@ public class Person {
 
     @Column(nullable = false)
     private String password;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "file_to_person",
+            joinColumns = { @JoinColumn(name = "person_id", referencedColumnName="id", nullable = false) },
+            inverseJoinColumns = { @JoinColumn(name = "file_id", referencedColumnName="id", nullable = false) }
+    )
+    private List<File> availableFiles;
 }
