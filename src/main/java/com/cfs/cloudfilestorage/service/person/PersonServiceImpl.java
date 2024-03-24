@@ -1,10 +1,12 @@
-package com.cfs.cloudfilestorage.service;
+package com.cfs.cloudfilestorage.service.person;
 
 import com.cfs.cloudfilestorage.dto.PersonDto;
 import com.cfs.cloudfilestorage.model.Person;
 import com.cfs.cloudfilestorage.repository.PersonRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class PersonServiceImpl implements PersonService{
@@ -28,8 +30,9 @@ public class PersonServiceImpl implements PersonService{
     }
 
     @Override
-    public Person findByEmail(String email) {
-        return personRepository.findByEmail(email);
+    public Optional<Person> findByEmail(String email) {
+        var person = personRepository.findByEmail(email);
+        return Optional.ofNullable(person);
     }
 
     @Override

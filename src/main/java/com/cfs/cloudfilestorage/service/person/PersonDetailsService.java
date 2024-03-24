@@ -1,4 +1,4 @@
-package com.cfs.cloudfilestorage.service;
+package com.cfs.cloudfilestorage.service.person;
 
 import com.cfs.cloudfilestorage.repository.PersonRepository;
 import org.springframework.security.core.GrantedAuthority;

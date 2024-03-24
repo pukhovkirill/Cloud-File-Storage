@@ -1,7 +1,7 @@
 package com.cfs.cloudfilestorage.controller;
 
 import com.cfs.cloudfilestorage.dto.PersonDto;
-import com.cfs.cloudfilestorage.service.PersonService;
+import com.cfs.cloudfilestorage.service.person.PersonService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
