@@ -32,7 +32,7 @@ public class RegistrationController {
                                Model model){
         var existingPerson = personService.findByEmail(personDto.getEmail());
 
-        if(existingPerson != null && existingPerson.getEmail() != null && !existingPerson.getEmail().isEmpty()){
+        if(existingPerson.isPresent()){
             result.rejectValue("email", null,
                     "There is already an account registered with the same email");
         }
