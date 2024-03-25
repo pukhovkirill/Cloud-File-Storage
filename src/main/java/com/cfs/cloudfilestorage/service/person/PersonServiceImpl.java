@@ -34,9 +34,19 @@ public class PersonServiceImpl implements PersonService{
         var person = personRepository.findByEmail(email);
         return Optional.ofNullable(person);
     }
+    
+    @Override
+    public Optional<Person> findById(Long id){
+        return personRepository.findById(id);
+    }
 
     @Override
     public void deletePerson(PersonDto person) {
         personRepository.deleteById(person.getId());
+    }
+
+    @Override
+    public void updatePerson(Person person){
+        personRepository.save(person);
     }
 }

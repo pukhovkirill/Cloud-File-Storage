@@ -1,5 +1,8 @@
 version: '3.8'
 
+volumes:
+  minio_data:
+
 services:
   postgres:
     image: 'postgres:latest'
@@ -16,3 +19,17 @@ services:
     container_name: 'cloud-file-storage-redis-database'
     ports:
       - '6379:6379'  
+
+  minio:
+    image: 'minio/minio:latest'
+    container_name: 'cloud-file-storage-minio'
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    volumes:
+      - 'minio_data:/data'
+    environment:
+      - 'MINIO_ROOT_USER=bf24e339e96f0c056c1b685807c0ba6496d5a6f637f2'
+      - 'MINIO_ROOT_PASSWORD=7341c0b12ef3faa77bfd9525918a325a18e1a40b9c6f7ff3a2497c23fc067a1f'
+      - 'MINIO_DEFAULT_BUCKETS=user-files'
+    command: server --console-address ":9001" /data

@@ -18,7 +18,7 @@ public class CloudFileStorageRegistrationTests {
 
     @Container
     @ServiceConnection
-    private static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:latest");
+    private final static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:latest");
 
     @Autowired
     PersonService personService;

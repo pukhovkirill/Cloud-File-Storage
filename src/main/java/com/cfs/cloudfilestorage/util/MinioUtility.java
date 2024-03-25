@@ -1,22 +1,19 @@
 package com.cfs.cloudfilestorage.util;
 
-import io.minio.BucketExistsArgs;
-import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
-import io.minio.errors.*;
 import lombok.Data;
-
-import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashSet;
 import java.util.Set;
 
 
 public class MinioUtility {
     private static final int COUNT_OF_CONNECTIONS = 10;
-
     private static final Set<MinioConnection> connections;
+
+    private static final String host;
+    private static final String port;
+    private static final String accessKey;
+    private static final String secreteKey;
 
     @Data
     private static class MinioConnection{
@@ -25,50 +22,25 @@ public class MinioUtility {
     }
 
     static{
+        host = PropertiesUtility.getApplicationProperty("app.minio_host");
+        port = PropertiesUtility.getApplicationProperty("app.minio_port_1");
+        accessKey = PropertiesUtility.getApplicationProperty("app.minio_access_key");
+        secreteKey = PropertiesUtility.getApplicationProperty("app.minio_secrete_key");
+
         connections = new HashSet<>();
         for(int i = 0; i < COUNT_OF_CONNECTIONS; i++){
             var minioConnection = new MinioConnection();
             minioConnection.client = buildClient();
             connections.add(minioConnection);
         }
-
-        var initiator = getClient();
-        initWorkspace(initiator);
-        releaseClient(initiator);
     }
 
     private static MinioClient buildClient(){
-        return MinioClient.builder()
-                        .endpoint("play.min.io", 9000, false)
-                        .credentials("Q3AM3UQ867SPQQA43P2F", "zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG")
-                        .build();
-    }
 
-    private static void initWorkspace(MinioClient client){
-        try {
-            if(client.bucketExists(
-                    BucketExistsArgs.builder()
-                            .bucket("user_files")
-                            .build())
-            ){
-                client.makeBucket(
-                        MakeBucketArgs.builder()
-                                .bucket("user_files")
-                                .build()
-                );
-            }
-        } catch (ErrorResponseException    |
-                 InsufficientDataException |
-                 InternalException         |
-                 InvalidKeyException       |
-                 InvalidResponseException  |
-                 IOException               |
-                 NoSuchAlgorithmException  |
-                 ServerException           |
-                 XmlParserException e)
-        {
-            throw new RuntimeException(e);
-        }
+        return MinioClient.builder()
+                        .endpoint(host, Integer.parseInt(port), true)
+                        .credentials(accessKey, secreteKey)
+                        .build();
     }
 
     public static MinioClient getClient(){
