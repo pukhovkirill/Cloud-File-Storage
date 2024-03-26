@@ -1,13 +1,15 @@
-package com.cfs.cloudfilestorage.service.storage;
+package com.cfs.cloudfilestorage.service.storage.Impl;
 
 import com.cfs.cloudfilestorage.dto.FolderDto;
 import com.cfs.cloudfilestorage.service.person.PersonService;
-import org.springframework.stereotype.Service;
+import com.cfs.cloudfilestorage.service.storage.FolderManageService;
 
-@Service
-public class FolderManageServiceImpl extends BaseManager implements FolderManageService{
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
-    public FolderManageServiceImpl(PersonService personService) {
+public class DBFolderManageService extends BaseDBManager implements FolderManageService {
+    public DBFolderManageService(PersonService personService) {
         super(personService);
     }
 
@@ -17,7 +19,7 @@ public class FolderManageServiceImpl extends BaseManager implements FolderManage
     }
 
     @Override
-    public void upload(FolderDto item) {
+    public void upload(FolderDto item) throws IOException, NoSuchAlgorithmException, InvalidKeyException {
 
     }
 

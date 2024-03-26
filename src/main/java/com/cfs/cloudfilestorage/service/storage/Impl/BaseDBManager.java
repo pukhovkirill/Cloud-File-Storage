@@ -1,4 +1,4 @@
-package com.cfs.cloudfilestorage.service.storage;
+package com.cfs.cloudfilestorage.service.storage.Impl;
 
 import com.cfs.cloudfilestorage.model.Person;
 import com.cfs.cloudfilestorage.service.person.PersonService;
@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Optional;
 
-public abstract class BaseManager {
+public abstract class BaseDBManager {
     protected final static String BUCKET_NAME;
 
     protected final PersonService personService;
@@ -17,7 +17,7 @@ public abstract class BaseManager {
         BUCKET_NAME = PropertiesUtility.getApplicationProperty("app.minio_bucket_name");
     }
 
-    public BaseManager(PersonService personService){
+    public BaseDBManager(PersonService personService){
         this.personService = personService;
     }
 
