@@ -9,6 +9,9 @@ spring:
     import: optional:file:.env[.properties]
   application:
     name: Cloud-File-Storage
+  main:
+    allow-bean-definition-overriding: true
+    lazy-initialization: true
   datasource:
     url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${POSTGRES_DB}
     name: ${POSTGRES_USERNAME}
