@@ -6,11 +6,14 @@ import com.cfs.cloudfilestorage.repository.FileRepository;
 import com.cfs.cloudfilestorage.service.person.PersonService;
 import com.cfs.cloudfilestorage.service.storage.FileManageService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
+@Service("DBFileManager")
 public class DBFileManageService extends BaseDBManager implements FileManageService {
 
     private final FileRepository fileRepository;

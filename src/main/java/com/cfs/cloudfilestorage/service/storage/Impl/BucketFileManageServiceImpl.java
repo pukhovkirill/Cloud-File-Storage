@@ -3,6 +3,9 @@ package com.cfs.cloudfilestorage.service.storage.Impl;
 import com.cfs.cloudfilestorage.dto.FileDto;
 import com.cfs.cloudfilestorage.service.storage.FileManageService;
 import com.cfs.cloudfilestorage.util.MinioUtility;
+import io.minio.BucketExistsArgs;
+import io.minio.MakeBucketArgs;
+import io.minio.MinioClient;
 import io.minio.UploadObjectArgs;
 import io.minio.errors.MinioException;
 import org.springframework.stereotype.Service;
@@ -13,7 +16,7 @@ import java.security.NoSuchAlgorithmException;
 
 import static com.cfs.cloudfilestorage.service.storage.Impl.BaseDBManager.BUCKET_NAME;
 
-@Service
+@Service("BucketFileManager")
 public class BucketFileManageServiceImpl implements FileManageService {
 
     private final DBFileManageService dbFileManageService;
@@ -33,6 +36,8 @@ public class BucketFileManageServiceImpl implements FileManageService {
             dbFileManageService.upload(item);
             var client = MinioUtility.getClient();
 
+            checkBucketOrCreate(client);
+
             client.uploadObject(
                     UploadObjectArgs.builder()
                             .bucket(BUCKET_NAME)
@@ -44,8 +49,8 @@ public class BucketFileManageServiceImpl implements FileManageService {
             MinioUtility.releaseClient(client);
 
         }catch (MinioException e){
-            System.out.println("Error occurred: " + e);
-            System.out.println("HTTP trace: " + e.httpTrace());
+            System.err.println("Error occurred: " + e);
+            System.err.println("HTTP trace: " + e.httpTrace());
         }
     }
 
@@ -67,5 +72,21 @@ public class BucketFileManageServiceImpl implements FileManageService {
     @Override
     public void share(FileDto item) {
 
+    }
+
+    private void checkBucketOrCreate(MinioClient client) throws IOException, NoSuchAlgorithmException, InvalidKeyException {
+        try{
+            boolean found =
+                    client.bucketExists(BucketExistsArgs.builder().bucket(BUCKET_NAME).build());
+
+            if(!found){
+                client.makeBucket(
+                        MakeBucketArgs.builder().bucket(BUCKET_NAME).build()
+                );
+            }
+        } catch (MinioException e){
+            System.err.println("Error occurred: " + e);
+            System.err.println("HTTP trace: " + e.httpTrace());
+        }
     }
 }
