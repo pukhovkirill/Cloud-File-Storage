@@ -1,24 +1,35 @@
-package com.cfs.cloudfilestorage.service.storage.Impl;
+package com.cfs.cloudfilestorage.service.storage;
 
+import com.cfs.cloudfilestorage.dto.StorageEntity;
 import com.cfs.cloudfilestorage.model.Person;
 import com.cfs.cloudfilestorage.service.person.PersonService;
 import com.cfs.cloudfilestorage.util.PropertiesUtility;
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Optional;
 
-public abstract class BaseDBManager {
+@Setter
+public abstract class StorageCommand<T extends StorageEntity>{
     protected final static String BUCKET_NAME;
-
-    protected final PersonService personService;
 
     static{
         BUCKET_NAME = PropertiesUtility.getApplicationProperty("app.minio_bucket_name");
     }
 
-    public BaseDBManager(PersonService personService){
-        this.personService = personService;
+    protected StorageCommand<T> next;
+
+    @Autowired
+    protected PersonService personService;
+
+    public <E extends StorageEntity> void execute(E entity, Object ... args) {
+        action(entity, args);
+
+        if (next != null) {
+            next.execute(entity);
+        }
     }
 
     protected Optional<Person> findPerson(){
@@ -28,4 +39,6 @@ public abstract class BaseDBManager {
 
         return Optional.empty();
     }
+
+    protected abstract <E extends StorageEntity> void action(E entity, Object ... args);
 }

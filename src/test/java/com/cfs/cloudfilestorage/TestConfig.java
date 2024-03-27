@@ -1,5 +1,6 @@
 package com.cfs.cloudfilestorage;
 
+import com.redis.testcontainers.RedisContainer;
 import io.minio.MinioClient;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
@@ -19,6 +20,16 @@ public class TestConfig {
         registry.add("spring.datasource.url", container::getJdbcUrl);
         registry.add("spring.datasource.name", container::getUsername);
         registry.add("spring.datasource.password", container::getPassword);
+
+        return container;
+    }
+
+    @Bean
+    public RedisContainer redisContainer(DynamicPropertyRegistry registry){
+        var container = new RedisContainer(
+                RedisContainer.DEFAULT_IMAGE_NAME.withTag(RedisContainer.DEFAULT_TAG));
+        registry.add("spring.data.redis.host", container::getRedisHost);
+        registry.add("spring.data.redis.port", container::getRedisPort);
 
         return container;
     }

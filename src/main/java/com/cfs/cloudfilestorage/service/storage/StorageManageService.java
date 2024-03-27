@@ -1,20 +1,22 @@
 package com.cfs.cloudfilestorage.service.storage;
 
+import com.cfs.cloudfilestorage.dto.StorageEntity;
+
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
-public interface StorageManageService<T> {
+public interface StorageManageService<T extends StorageEntity>{
 
-    void create(String name);
+    T create(T item);
 
-    void upload(T item) throws IOException, NoSuchAlgorithmException, InvalidKeyException;
+    T upload(T item);
 
-    void rename(T item, String newName);
+    T rename(T item, String newName);
 
-    T download(String name, String saveAsName);
+    T download(T item);
 
-    void remove(T item);
+    T remove(T item);
 
-    void share(T item);
+    T share(T item, Long userId);
 }

@@ -1,6 +1,5 @@
 package com.cfs.cloudfilestorage.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,18 +12,7 @@ import java.sql.Timestamp;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class FileDto {
-
-    private Long id;
-
-    @NotBlank
-    private String name;
-
-    @NotBlank
-    private String fileName;
-
-    @NotBlank
-    private String contentType;
+public class FileDto extends StorageEntity{
 
     @NotNull
     private Timestamp lastModified;
