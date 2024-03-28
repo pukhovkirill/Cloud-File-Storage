@@ -6,6 +6,7 @@ import com.cfs.cloudfilestorage.repository.PersonRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -26,6 +27,8 @@ public class PersonServiceImpl implements PersonService{
         newPerson.setEmail(person.getEmail());
         newPerson.setPhone(person.getPhone());
         newPerson.setPassword(passwordEncoder.encode(person.getPassword()));
+        newPerson.setAvailableFiles(new ArrayList<>());
+        newPerson.setAvailableFolders(new ArrayList<>());
         personRepository.save(newPerson);
     }
 

@@ -1,22 +1,23 @@
-package com.cfs.cloudfilestorage.service.storage.Impl.command.file;
+package com.cfs.cloudfilestorage.service.storage.Impl.command.folder;
 
 import com.cfs.cloudfilestorage.dto.FileDto;
+import com.cfs.cloudfilestorage.dto.FolderDto;
 import com.cfs.cloudfilestorage.dto.StorageEntity;
-import com.cfs.cloudfilestorage.model.Person;
-import com.cfs.cloudfilestorage.repository.FileRepository;
+import com.cfs.cloudfilestorage.repository.FolderRepository;
 import com.cfs.cloudfilestorage.service.storage.StorageCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.io.FileNotFoundException;
+import java.nio.file.DirectoryNotEmptyException;
 
-public class DBShareFileCommand extends StorageCommand<FileDto> {
+public class DBShareFolderCommand extends StorageCommand<FolderDto> {
 
     @Autowired
-    private FileRepository fileRepository;
+    private FolderRepository folderRepository;
 
     @Override
-    protected <E extends StorageEntity> void action(E entity, Object ... args) {
+    protected <E extends StorageEntity> void action(E entity, Object... args) {
         var optionalPerson = personService.findById((Long) args[0]);
 
         try {
@@ -27,19 +28,19 @@ public class DBShareFileCommand extends StorageCommand<FileDto> {
             var person = optionalPerson.get();
 
             if(entity instanceof FileDto item){
-                var optionalFile = fileRepository.findById(item.getId());
-                if(optionalFile.isEmpty()){
-                    throw new FileNotFoundException();
+                var optionalFolder = folderRepository.findById(item.getId());
+                if(optionalFolder.isEmpty()){
+                    return;
                 }
 
-                var file = optionalFile.get();
+                var folder = optionalFolder.get();
 
-                person.getAvailableFiles().add(file);
+                person.getAvailableFolders().add(folder);
 
                 personService.updatePerson(person);
             }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

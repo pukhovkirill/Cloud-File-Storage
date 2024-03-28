@@ -41,9 +41,9 @@ public class MinioUtility {
             connections.add(minioConnection);
         }
 
-//        var initiator = getClient();
-//        initMinio(initiator);
-//        releaseClient(initiator);
+        var initiator = getClient();
+        initMinio(initiator);
+        releaseClient(initiator);
     }
 
     private static void initMinio(MinioClient client){

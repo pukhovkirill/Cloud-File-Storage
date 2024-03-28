@@ -9,6 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.sql.Timestamp;
+
 public class DBUploadFileCommand extends StorageCommand<FileDto> {
 
     @Autowired
@@ -16,29 +21,37 @@ public class DBUploadFileCommand extends StorageCommand<FileDto> {
 
     @Override
     protected <E extends StorageEntity> void action(E entity, Object ... args) {
-        if(entity instanceof FileDto item){
-            var optionalPerson = findPerson();
+        try{
+            if(entity instanceof FileDto item){
+                var optionalPerson = findPerson();
 
-            if(optionalPerson.isEmpty()){
-                throw new UsernameNotFoundException("Person not found");
+                if(optionalPerson.isEmpty()){
+                    throw new UsernameNotFoundException("Person not found");
+                }
+
+                var person = optionalPerson.get();
+                item.setName(String.format("user-%d-files/%s", person.getId(), item.getName()));
+
+                var filePath = Path.of(item.getPath());
+
+                var file = new File(
+                        null,
+                        item.getName(),
+                        item.getPath(),
+                        Files.probeContentType(filePath),
+                        new Timestamp(System.currentTimeMillis()),
+                        Files.size(filePath),
+                        person
+                );
+
+                file = fileRepository.save(file);
+
+                person.getAvailableFiles().add(file);
+
+                personService.updatePerson(person);
             }
-
-            var person = optionalPerson.get();
-            item.setName(String.format("user-%d-files/%s", person.getId(), item.getName()));
-
-            var file = new File();
-            file.setName(item.getName());
-            file.setFileName(item.getName());
-            file.setFileSize(item.getFileSize());
-            file.setContentType(item.getContentType());
-            file.setLastModified(item.getLastModified());
-            file.setOwner(person);
-
-            file = fileRepository.save(file);
-
-            person.getAvailableFiles().add(file);
-
-            personService.updatePerson(person);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

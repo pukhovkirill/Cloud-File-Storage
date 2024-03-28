@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Optional;
 
-@Setter
 public abstract class StorageCommand<T extends StorageEntity>{
     protected final static String BUCKET_NAME;
 
@@ -23,6 +22,11 @@ public abstract class StorageCommand<T extends StorageEntity>{
 
     @Autowired
     protected PersonService personService;
+
+    public StorageCommand<T> setNext(StorageCommand<T> next){
+        this.next = next;
+        return next;
+    }
 
     public <E extends StorageEntity> void execute(E entity, Object ... args) {
         action(entity, args);
