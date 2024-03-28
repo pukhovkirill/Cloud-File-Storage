@@ -2,12 +2,17 @@ package com.cfs.cloudfilestorage.service.storage;
 
 import com.cfs.cloudfilestorage.dto.StorageEntity;
 import com.cfs.cloudfilestorage.model.Person;
+import com.cfs.cloudfilestorage.repository.PersonRepository;
 import com.cfs.cloudfilestorage.service.person.PersonService;
+import com.cfs.cloudfilestorage.service.person.PersonServiceImpl;
 import com.cfs.cloudfilestorage.util.PropertiesUtility;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
@@ -19,9 +24,6 @@ public abstract class StorageCommand<T extends StorageEntity>{
     }
 
     protected StorageCommand<T> next;
-
-    @Autowired
-    protected PersonService personService;
 
     public StorageCommand<T> setNext(StorageCommand<T> next){
         this.next = next;
@@ -36,7 +38,7 @@ public abstract class StorageCommand<T extends StorageEntity>{
         }
     }
 
-    protected Optional<Person> findPerson(){
+    protected Optional<Person> findPerson(PersonService personService){
         var details = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(details instanceof UserDetails user)
             return personService.findByEmail(user.getUsername());

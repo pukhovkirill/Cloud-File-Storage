@@ -34,7 +34,7 @@ public class File {
     private Timestamp lastModified;
 
     @Column(name = "file_size", nullable = false)
-    private double fileSize;
+    private int fileSize;
 
     @OneToOne
     @JoinColumn(name = "owner_id", referencedColumnName = "id", nullable = false)

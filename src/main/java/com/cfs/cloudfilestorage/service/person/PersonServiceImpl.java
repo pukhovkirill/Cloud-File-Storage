@@ -3,6 +3,7 @@ package com.cfs.cloudfilestorage.service.person;
 import com.cfs.cloudfilestorage.dto.PersonDto;
 import com.cfs.cloudfilestorage.model.Person;
 import com.cfs.cloudfilestorage.repository.PersonRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ public class PersonServiceImpl implements PersonService{
     private final PersonRepository personRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Autowired
     public PersonServiceImpl(PersonRepository personRepository, PasswordEncoder passwordEncoder){
         this.personRepository = personRepository;
         this.passwordEncoder = passwordEncoder;

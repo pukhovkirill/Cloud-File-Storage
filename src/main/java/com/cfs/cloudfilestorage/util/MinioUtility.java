@@ -66,7 +66,7 @@ public class MinioUtility {
     private static MinioClient buildClient(){
 
         return MinioClient.builder()
-                        .endpoint(host, Integer.parseInt(port), true)
+                        .endpoint(host, Integer.parseInt(port), false)
                         .credentials(accessKey, secreteKey)
                         .build();
     }

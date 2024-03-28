@@ -4,6 +4,8 @@ import com.cfs.cloudfilestorage.dto.FileDto;
 import com.cfs.cloudfilestorage.service.storage.FileManageService;
 import com.cfs.cloudfilestorage.service.storage.Impl.command.file.*;
 import com.cfs.cloudfilestorage.service.storage.StorageCommand;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service("FileManageService")
@@ -11,27 +13,8 @@ public class FileManageServiceImpl implements FileManageService {
 
     private final StorageSwitch storageSwitch;
 
-    public FileManageServiceImpl(StorageSwitch storageSwitch){
+    public FileManageServiceImpl(@Qualifier("fileStorageSwitch") StorageSwitch storageSwitch){
         this.storageSwitch = storageSwitch;
-
-        StorageCommand<FileDto> uploadCommand = new DBUploadFileCommand();
-        uploadCommand.setNext(new BucketUploadFileCommand());
-        storageSwitch.register("upload", uploadCommand);
-
-        StorageCommand<FileDto> downloadCommand = new BucketDownloadFileCommand();
-        storageSwitch.register("download", downloadCommand);
-
-        StorageCommand<FileDto> removeCommand = new DBRemoveFileCommand();
-        removeCommand.setNext(new BucketRemoveFileCommand());
-        storageSwitch.register("remove", removeCommand);
-
-        StorageCommand<FileDto> renameCommand = new DBRenameFileCommand();
-        renameCommand.setNext(new BucketRenameFileCommand());
-        storageSwitch.register("rename", renameCommand);
-
-        StorageCommand<FileDto> shareCommand = new DBShareFileCommand();
-        storageSwitch.register("share", shareCommand);
-
     }
 
     @Override

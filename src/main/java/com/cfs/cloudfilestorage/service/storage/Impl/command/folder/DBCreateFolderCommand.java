@@ -4,14 +4,20 @@ import com.cfs.cloudfilestorage.dto.FolderDto;
 import com.cfs.cloudfilestorage.dto.StorageEntity;
 import com.cfs.cloudfilestorage.model.Folder;
 import com.cfs.cloudfilestorage.repository.FolderRepository;
+import com.cfs.cloudfilestorage.service.person.PersonService;
 import com.cfs.cloudfilestorage.service.storage.StorageCommand;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 public class DBCreateFolderCommand extends StorageCommand<FolderDto> {
 
-    @Autowired
-    private FolderRepository folderRepository;
+    private final FolderRepository folderRepository;
+
+    private final PersonService personService;
+
+    public DBCreateFolderCommand(FolderRepository folderRepository, PersonService personService){
+        this.folderRepository = folderRepository;
+        this.personService = personService;
+    }
 
     @Override
     protected <E extends StorageEntity> void action(E entity, Object... args) {
@@ -21,7 +27,7 @@ public class DBCreateFolderCommand extends StorageCommand<FolderDto> {
                 return;
             }
 
-            var optionalPerson = findPerson();
+            var optionalPerson = findPerson(personService);
 
             if(optionalPerson.isEmpty()){
                 throw new UsernameNotFoundException("Person not found");

@@ -1,5 +1,6 @@
 package com.cfs.cloudfilestorage.dto;
 
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,5 +19,8 @@ public class FileDto extends StorageEntity{
     private Timestamp lastModified;
 
     @NotNull
-    private double fileSize;
+    private int fileSize;
+
+    @NotEmpty
+    private byte[] bytes;
 }

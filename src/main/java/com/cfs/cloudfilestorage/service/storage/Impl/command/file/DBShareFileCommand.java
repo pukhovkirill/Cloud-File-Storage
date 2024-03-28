@@ -2,18 +2,23 @@ package com.cfs.cloudfilestorage.service.storage.Impl.command.file;
 
 import com.cfs.cloudfilestorage.dto.FileDto;
 import com.cfs.cloudfilestorage.dto.StorageEntity;
-import com.cfs.cloudfilestorage.model.Person;
 import com.cfs.cloudfilestorage.repository.FileRepository;
+import com.cfs.cloudfilestorage.service.person.PersonService;
 import com.cfs.cloudfilestorage.service.storage.StorageCommand;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.io.FileNotFoundException;
 
 public class DBShareFileCommand extends StorageCommand<FileDto> {
 
-    @Autowired
-    private FileRepository fileRepository;
+    private final FileRepository fileRepository;
+
+    private final PersonService personService;
+
+    public DBShareFileCommand(FileRepository fileRepository, PersonService personService){
+        this.fileRepository = fileRepository;
+        this.personService = personService;
+    }
 
     @Override
     protected <E extends StorageEntity> void action(E entity, Object ... args) {

@@ -21,7 +21,10 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create-drop
-
+  servlet:
+    multipart:
+      max-file-size: 1GB
+      max-request-size: 1GB
   data:
     redis:
       host: ${REDIS_HOST}

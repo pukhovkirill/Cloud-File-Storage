@@ -4,14 +4,16 @@ import com.cfs.cloudfilestorage.dto.FileDto;
 import com.cfs.cloudfilestorage.dto.StorageEntity;
 import com.cfs.cloudfilestorage.repository.FileRepository;
 import com.cfs.cloudfilestorage.service.storage.StorageCommand;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.FileNotFoundException;
 
 public class DBRenameFileCommand extends StorageCommand<FileDto> {
 
-    @Autowired
-    private FileRepository fileRepository;
+    private final FileRepository fileRepository;
+
+    public DBRenameFileCommand(FileRepository fileRepository){
+        this.fileRepository = fileRepository;
+    }
 
     @Override
     protected <E extends StorageEntity> void action(E entity, Object ... args) {

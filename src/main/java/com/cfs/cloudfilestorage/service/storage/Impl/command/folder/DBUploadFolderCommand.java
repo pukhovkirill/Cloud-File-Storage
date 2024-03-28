@@ -6,8 +6,8 @@ import com.cfs.cloudfilestorage.model.File;
 import com.cfs.cloudfilestorage.model.Folder;
 import com.cfs.cloudfilestorage.repository.FileRepository;
 import com.cfs.cloudfilestorage.repository.FolderRepository;
+import com.cfs.cloudfilestorage.service.person.PersonService;
 import com.cfs.cloudfilestorage.service.storage.StorageCommand;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.io.IOException;
@@ -20,16 +20,22 @@ import java.util.ArrayList;
 
 public class DBUploadFolderCommand extends StorageCommand<FolderDto> {
 
-    @Autowired
-    private FolderRepository folderRepository;
+    private final FolderRepository folderRepository;
 
-    @Autowired
-    private FileRepository fileRepository;
+    private final FileRepository fileRepository;
+
+    private final PersonService personService;
+
+    public DBUploadFolderCommand(FolderRepository folderRepository, FileRepository fileRepository, PersonService personService){
+        this.folderRepository = folderRepository;
+        this.fileRepository = fileRepository;
+        this.personService = personService;
+    }
 
     @Override
     protected <E extends StorageEntity> void action(E entity, Object... args) {
         if(entity instanceof FolderDto item){
-            var optionalPerson = findPerson();
+            var optionalPerson = findPerson(personService);
 
             if(optionalPerson.isEmpty()){
                 throw new UsernameNotFoundException("Person not found");
