@@ -1,48 +1,45 @@
 package com.cfs.cloudfilestorage.service.storage.Impl.command.file;
 
-import com.cfs.cloudfilestorage.dto.FileDto;
 import com.cfs.cloudfilestorage.dto.StorageEntity;
-import com.cfs.cloudfilestorage.repository.FileRepository;
+import com.cfs.cloudfilestorage.repository.ItemRepository;
 import com.cfs.cloudfilestorage.service.person.PersonService;
 import com.cfs.cloudfilestorage.service.storage.StorageCommand;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.io.FileNotFoundException;
 
-public class DBShareFileCommand extends StorageCommand<FileDto> {
+public class DBShareFileCommand extends StorageCommand {
 
-    private final FileRepository fileRepository;
+    private final ItemRepository itemRepository;
 
     private final PersonService personService;
 
-    public DBShareFileCommand(FileRepository fileRepository, PersonService personService){
-        this.fileRepository = fileRepository;
+    public DBShareFileCommand(ItemRepository itemRepository, PersonService personService){
+        this.itemRepository = itemRepository;
         this.personService = personService;
     }
 
     @Override
-    protected <E extends StorageEntity> void action(E entity, Object ... args) {
-        var optionalPerson = personService.findById((Long) args[0]);
+    protected void action(StorageEntity entity, Object ... args) {
+        var optPerson = personService.findById((Long) args[0]);
 
         try {
-            if(optionalPerson.isEmpty()){
+            if(optPerson.isEmpty()){
                 throw new UsernameNotFoundException("Person not found");
             }
 
-            var person = optionalPerson.get();
+            var person = optPerson.get();
 
-            if(entity instanceof FileDto item){
-                var optionalFile = fileRepository.findById(item.getId());
-                if(optionalFile.isEmpty()){
-                    throw new FileNotFoundException();
-                }
-
-                var file = optionalFile.get();
-
-                person.getAvailableFiles().add(file);
-
-                personService.updatePerson(person);
+            var optItem = itemRepository.findById(entity.getId());
+            if(optItem.isEmpty()){
+                throw new FileNotFoundException();
             }
+
+            var item = optItem.get();
+
+            person.getAvailableItems().add(item);
+
+            personService.updatePerson(person);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }

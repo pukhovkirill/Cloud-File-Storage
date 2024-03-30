@@ -33,7 +33,7 @@ public class PersonServiceImpl implements PersonService, AuthorizedPersonService
                 .email(person.getEmail())
                 .phone(person.getPhone())
                 .password(passwordEncoder.encode(person.getPassword()))
-                .availableFiles(new ArrayList<>())
+                .availableItems(new ArrayList<>())
                 .build();
 
         personRepository.save(newPerson);

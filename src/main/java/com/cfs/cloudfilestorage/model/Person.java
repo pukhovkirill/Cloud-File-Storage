@@ -38,9 +38,9 @@ public class Person {
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
-            name = "file_to_person",
+            name = "item_to_person",
             joinColumns = { @JoinColumn(name = "person_id", referencedColumnName = "id", nullable = false) },
-            inverseJoinColumns = { @JoinColumn(name = "file_id", referencedColumnName = "id", nullable = false) }
+            inverseJoinColumns = { @JoinColumn(name = "item_id", referencedColumnName = "id", nullable = false) }
     )
-    private List<File> availableFiles;
+    private List<StorageItem> availableItems;
 }

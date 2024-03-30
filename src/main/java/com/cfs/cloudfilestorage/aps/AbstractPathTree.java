@@ -1,7 +1,5 @@
 package com.cfs.cloudfilestorage.aps;
 
-import com.cfs.cloudfilestorage.dto.FileDto;
-import com.cfs.cloudfilestorage.dto.FolderDto;
 import com.cfs.cloudfilestorage.dto.StorageEntity;
 import lombok.Builder;
 
@@ -95,11 +93,11 @@ public class AbstractPathTree implements APS{
     }
 
     @Override
-    public void addFile(FileDto fileDto){
+    public void addFile(StorageEntity fileDto){
         if(!isExist(fileDto)){
             var folderPath = fileDto.getPath().replace(fileDto.getName(), "");
             var folder = find(
-                    FolderDto.builder()
+                    StorageEntity.builder()
                     .path(folderPath)
                     .build()
             );
@@ -123,11 +121,11 @@ public class AbstractPathTree implements APS{
     }
 
     @Override
-    public void addFolder(FolderDto folderDto){
+    public void addFolder(StorageEntity folderDto){
         if(!isExist(folderDto)){
             var folderPath = folderDto.getPath().replace(folderDto.getName(), "");
             var folder = find(
-                    FolderDto.builder()
+                    StorageEntity.builder()
                             .path(folderPath)
                             .build()
             );
@@ -152,12 +150,12 @@ public class AbstractPathTree implements APS{
     }
 
     @Override
-    public Iterator<PathNode> getFolder(FolderDto folderDto){
-        return find(folderDto).getChildren();
+    public Iterator<PathNode> getFolder(StorageEntity entity){
+        return find(entity).getChildren();
     }
 
     @Override
-    public Iterator<PathNode> buildTreeByPath(List<FileDto> entities) {
+    public Iterator<PathNode> buildTreeByPath(List<StorageEntity> entities) {
         for(var entity : entities){
             var root = find(entity);
             if(root == null){

@@ -1,6 +1,5 @@
 package com.cfs.cloudfilestorage.service.storage.Impl.command.file;
 
-import com.cfs.cloudfilestorage.dto.FileDto;
 import com.cfs.cloudfilestorage.dto.StorageEntity;
 import com.cfs.cloudfilestorage.service.storage.StorageCommand;
 import com.cfs.cloudfilestorage.util.MinioUtility;
@@ -11,26 +10,24 @@ import java.io.*;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
-public class BucketUploadFileCommand extends StorageCommand<FileDto> {
+public class BucketUploadFileCommand extends StorageCommand {
 
     @Override
-    protected <E extends StorageEntity> void action(E entity, Object ... args){
+    protected void action(StorageEntity entity, Object ... args){
         try{
-            if(entity instanceof FileDto item){
-                var client = MinioUtility.getClient();
+            var client = MinioUtility.getClient();
 
-                byte[] buff = item.getBytes();
+            byte[] buff = entity.getBytes();
 
-                client.putObject(
-                        PutObjectArgs.builder()
-                                .bucket(BUCKET_NAME)
-                                .object(item.getPath())
-                                .stream(new ByteArrayInputStream(buff), item.getFileSize(), -1)
-                                .contentType(item.getContentType())
-                                .build());
+            client.putObject(
+                    PutObjectArgs.builder()
+                            .bucket(BUCKET_NAME)
+                            .object(entity.getPath())
+                            .stream(new ByteArrayInputStream(buff), entity.getSize(), -1)
+                            .contentType(entity.getContentType())
+                            .build());
 
-                MinioUtility.releaseClient(client);
-            }
+            MinioUtility.releaseClient(client);
 
         }catch (MinioException e){
             System.err.println("Error occurred: " + e);

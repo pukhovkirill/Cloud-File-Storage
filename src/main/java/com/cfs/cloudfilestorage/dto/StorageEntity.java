@@ -1,10 +1,11 @@
 package com.cfs.cloudfilestorage.dto;
 
-import com.cfs.cloudfilestorage.model.File;
-import com.cfs.cloudfilestorage.model.Person;
+import com.cfs.cloudfilestorage.model.StorageItem;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,8 +13,9 @@ import java.sql.Timestamp;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
-public abstract class StorageEntity {
+public class StorageEntity {
 
     protected Long id;
 
@@ -30,18 +32,21 @@ public abstract class StorageEntity {
     protected Timestamp lastModified;
 
     @NotNull
-    protected int fileSize;
+    protected int size;
 
     @NotNull
     protected String owner;
 
-    public StorageEntity(File file){
-        this.id = file.getId();
-        this.name = file.getName();
-        this.path = file.getFileName();
-        this.contentType = file.getContentType();
-        this.lastModified = file.getLastModified();
-        this.fileSize = file.getFileSize();
-        this.owner = file.getOwnerEmail();
+    @NotEmpty
+    private byte[] bytes;
+
+    public StorageEntity(StorageItem item){
+        this.id = item.getId();
+        this.name = item.getName();
+        this.path = item.getPath();
+        this.size = item.getItemSize();
+        this.owner = item.getOwnerEmail();
+        this.contentType = item.getContentType();
+        this.lastModified = item.getLastModified();
     }
 }

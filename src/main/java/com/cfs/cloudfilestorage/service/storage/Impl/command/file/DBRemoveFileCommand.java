@@ -1,21 +1,19 @@
 package com.cfs.cloudfilestorage.service.storage.Impl.command.file;
 
-import com.cfs.cloudfilestorage.dto.FileDto;
 import com.cfs.cloudfilestorage.dto.StorageEntity;
-import com.cfs.cloudfilestorage.repository.FileRepository;
+import com.cfs.cloudfilestorage.repository.ItemRepository;
 import com.cfs.cloudfilestorage.service.storage.StorageCommand;
 
-public class DBRemoveFileCommand extends StorageCommand<FileDto> {
+public class DBRemoveFileCommand extends StorageCommand {
 
-    private final FileRepository fileRepository;
+    private final ItemRepository itemRepository;
 
-    public DBRemoveFileCommand(FileRepository fileRepository){
-        this.fileRepository = fileRepository;
+    public DBRemoveFileCommand(ItemRepository itemRepository){
+        this.itemRepository = itemRepository;
     }
 
     @Override
-    protected <E extends StorageEntity> void action(E entity, Object ... args) {
-        if(entity instanceof FileDto item)
-            fileRepository.deleteById(item.getId());
+    protected void action(StorageEntity entity, Object ... args) {
+        itemRepository.deleteById(entity.getId());
     }
 }

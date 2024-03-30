@@ -1,36 +1,33 @@
 package com.cfs.cloudfilestorage.service.storage.Impl.command.file;
 
-import com.cfs.cloudfilestorage.dto.FileDto;
 import com.cfs.cloudfilestorage.dto.StorageEntity;
-import com.cfs.cloudfilestorage.repository.FileRepository;
+import com.cfs.cloudfilestorage.repository.ItemRepository;
 import com.cfs.cloudfilestorage.service.storage.StorageCommand;
 
 import java.io.FileNotFoundException;
 
-public class DBRenameFileCommand extends StorageCommand<FileDto> {
+public class DBRenameFileCommand extends StorageCommand {
 
-    private final FileRepository fileRepository;
+    private final ItemRepository itemRepository;
 
-    public DBRenameFileCommand(FileRepository fileRepository){
-        this.fileRepository = fileRepository;
+    public DBRenameFileCommand(ItemRepository itemRepository){
+        this.itemRepository = itemRepository;
     }
 
     @Override
-    protected <E extends StorageEntity> void action(E entity, Object ... args) {
+    protected void action(StorageEntity entity, Object ... args) {
         String newFileName = (String) args[0];
         try {
-            if(entity instanceof FileDto item){
-                var optionalFile = fileRepository.findById(item.getId());
+            var optItem = itemRepository.findById(entity.getId());
 
-                if(optionalFile.isEmpty()){
-                    throw new FileNotFoundException();
-                }
-
-                var file = optionalFile.get();
-                file.setName(newFileName);
-
-                fileRepository.save(file);
+            if(optItem.isEmpty()){
+                throw new FileNotFoundException();
             }
+
+            var item = optItem.get();
+            item.setName(newFileName);
+
+            itemRepository.save(item);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }

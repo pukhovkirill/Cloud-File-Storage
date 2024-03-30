@@ -2,17 +2,17 @@ package com.cfs.cloudfilestorage.service.storage;
 
 import com.cfs.cloudfilestorage.dto.StorageEntity;
 
-public interface StorageManageService<T extends StorageEntity>{
+public interface StorageManageService{
 
-    T create(T item);
+    StorageEntity create(StorageEntity item);
 
-    T upload(T item);
+    StorageEntity upload(StorageEntity item);
 
-    T rename(T item, String newName);
+    StorageEntity rename(StorageEntity item, String newName);
 
-    T download(T item);
+    StorageEntity download(StorageEntity item);
 
-    T remove(T item);
+    StorageEntity remove(StorageEntity item);
 
-    T share(T item, Long userId);
+    StorageEntity share(StorageEntity item, Long userId);
 }

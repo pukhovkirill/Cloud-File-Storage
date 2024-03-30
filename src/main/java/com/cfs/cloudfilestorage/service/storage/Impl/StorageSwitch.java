@@ -7,9 +7,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class StorageSwitch {
-    private final Map<String, StorageCommand<? extends StorageEntity>> commands = new HashMap<>();
+    private final Map<String, StorageCommand> commands = new HashMap<>();
 
-    public void register(String name, StorageCommand<? extends StorageEntity> command){
+    public void register(String name, StorageCommand command){
         commands.put(name, command);
     }
 

@@ -1,6 +1,5 @@
 package com.cfs.cloudfilestorage.service.storage.Impl.command.file;
 
-import com.cfs.cloudfilestorage.dto.FileDto;
 import com.cfs.cloudfilestorage.dto.StorageEntity;
 import com.cfs.cloudfilestorage.service.storage.StorageCommand;
 import com.cfs.cloudfilestorage.util.MinioUtility;
@@ -12,21 +11,21 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
-public class BucketUploadMultipleFileCommand extends StorageCommand<FileDto> {
+public class BucketUploadMultipleFileCommand extends StorageCommand {
     @Override
-    protected <E extends StorageEntity> void action(E entity, Object... args) {
-        if(args[0] instanceof FileDto[] fileDtoArray){
+    protected void action(StorageEntity entity, Object... args) {
+        if(args[0] instanceof StorageEntity[] entities){
             try{
                 var client = MinioUtility.getClient();
 
-                for(var item : fileDtoArray){
+                for(var item : entities){
                     byte[] buff = item.getBytes();
 
                     client.putObject(
                             PutObjectArgs.builder()
                                     .bucket(BUCKET_NAME)
                                     .object(item.getPath())
-                                    .stream(new ByteArrayInputStream(buff), item.getFileSize(), -1)
+                                    .stream(new ByteArrayInputStream(buff), item.getSize(), -1)
                                     .contentType(item.getContentType())
                                     .build());
                 }

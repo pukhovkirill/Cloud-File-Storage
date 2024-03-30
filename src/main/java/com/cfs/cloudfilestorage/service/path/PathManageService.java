@@ -1,14 +1,13 @@
 package com.cfs.cloudfilestorage.service.path;
 
-import com.cfs.cloudfilestorage.dto.FileDto;
 import com.cfs.cloudfilestorage.dto.StorageEntity;
-import com.cfs.cloudfilestorage.model.File;
+import com.cfs.cloudfilestorage.model.StorageItem;
 
 import java.util.List;
 
 public interface PathManageService {
 
-    List<FileDto> buildStoragePath(List<File> files);
+    List<StorageEntity> buildStoragePath(List<StorageItem> files);
 
-    List<FileDto> getPath(String path);
+    List<StorageEntity> getPath(String path);
 }

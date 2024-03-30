@@ -8,13 +8,13 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 
-@Table(name = "file")
+@Table(name = "item")
 @Entity
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class File {
+public class StorageItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,8 +24,8 @@ public class File {
     @Column(unique = true)
     private String name;
 
-    @Column(name = "file_name", unique = true)
-    private String fileName;
+    @Column(name = "item_name", unique = true)
+    private String path;
 
     @Column(name = "content_type", nullable = false)
     private String contentType = "folder";
@@ -33,8 +33,8 @@ public class File {
     @Column(name = "last_modified", nullable = false)
     private Timestamp lastModified;
 
-    @Column(name = "file_size", nullable = false)
-    private int fileSize;
+    @Column(name = "item_size", nullable = false)
+    private int itemSize;
 
     @Column(name = "owner_email", nullable = false)
     private String ownerEmail;

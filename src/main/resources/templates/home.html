@@ -327,11 +327,8 @@
                                     <span class="visually-hidden">Home</span>
                                 </a>
                             </li>
-                            <li class="breadcrumb-item">
-                                <a class="link-body-emphasis text-decoration-none" href="#">Library</a>
-                            </li>
-                            <li class="breadcrumb-item active" aria-current="page">
-                                Data
+                            <li th:each="path: ${pathView}">
+                                <a class="link-body-emphasis text-decoration-none" th:href="@{?folder=${path}}" th:text="${path}">path</a>
                             </li>
                         </ol>
                     </nav>
@@ -351,7 +348,7 @@
                                     <td th:text="${entity.name}">logo.svg</td>
                                     <td th:text="${entity.owner.equals(person.email) ? 'me' : entity.owner}">me</td>
                                     <td th:text="${#dates.format(entity.lastModified, 'HH:mm')}">15:21</td>
-                                    <td th:text="${entity.fileSize} + ' byte'">3 kb</td>
+                                    <td th:text="${entity.size} + ' byte'">3 kb</td>
                                     <td th:text="${entity.owner.equals(person.email) ? 'my vault' : 'available to me'}">my vault</td>
                                 </tr>
                             </tbody>

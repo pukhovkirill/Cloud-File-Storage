@@ -2,11 +2,8 @@ package com.cfs.cloudfilestorage.service.path;
 
 import com.cfs.cloudfilestorage.aps.APS;
 import com.cfs.cloudfilestorage.aps.AbstractPathTree;
-import com.cfs.cloudfilestorage.dto.FileDto;
-import com.cfs.cloudfilestorage.dto.FolderDto;
 import com.cfs.cloudfilestorage.dto.StorageEntity;
-import com.cfs.cloudfilestorage.model.File;
-import com.cfs.cloudfilestorage.model.Person;
+import com.cfs.cloudfilestorage.model.StorageItem;
 import com.cfs.cloudfilestorage.service.person.AuthorizedPersonService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -50,27 +47,28 @@ public class PathManageServiceImpl implements PathManageService, PathConvertServ
     }
 
     @Override
-    public List<FileDto> buildStoragePath(List<File> files) {
+    public List<StorageEntity> buildStoragePath(List<StorageItem> items) {
         this.tree = new AbstractPathTree(getPersonRootFolder());
-        List<FileDto> entities = new ArrayList<>();
+        List<StorageEntity> entities = new ArrayList<>();
 
-        var person =  authorizedPersonService.findPerson().get();
-
-        for(var file : files){
-            var entity = new FileDto(file);
+        for(var item : items){
+            var entity = new StorageEntity(item);
             entities.add(entity);
         }
+
         var iterator = tree.buildTreeByPath(entities);
         entities = new ArrayList<>();
         while(iterator.hasNext()){
-            entities.add((FileDto) iterator.next().getEntity());
+            entities.add(iterator.next().getEntity());
         }
 
         return entities;
     }
 
     @Override
-    public List<FileDto> getPath(String path) {
+    public List<StorageEntity> getPath(String path) {
         return null;
     }
+
+
 }
