@@ -20,7 +20,7 @@ public class BucketCreateFolderCommand extends StorageCommand<FolderDto> {
                 var client = MinioUtility.getClient();
 
                 client.putObject(
-                        PutObjectArgs.builder().bucket(BUCKET_NAME).object(item.getName()+"/").stream(
+                        PutObjectArgs.builder().bucket(BUCKET_NAME).object(item.getPath()+"/").stream(
                                 new ByteArrayInputStream(new byte[] {}), 0, -1).build());
 
                 MinioUtility.releaseClient(client);

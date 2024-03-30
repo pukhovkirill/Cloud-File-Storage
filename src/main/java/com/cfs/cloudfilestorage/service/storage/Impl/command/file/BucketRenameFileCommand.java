@@ -23,7 +23,7 @@ public class BucketRenameFileCommand extends StorageCommand<FileDto> {
                 client.copyObject(
                         CopyObjectArgs.builder()
                                 .bucket(BUCKET_NAME)
-                                .object(item.getName())
+                                .object(item.getPath())
                                 .source(
                                         CopySource.builder()
                                                 .bucket(BUCKET_NAME)

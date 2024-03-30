@@ -4,6 +4,9 @@ import com.cfs.cloudfilestorage.dto.PersonDto;
 import com.cfs.cloudfilestorage.model.Person;
 import com.cfs.cloudfilestorage.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
-public class PersonServiceImpl implements PersonService{
+public class PersonServiceImpl implements PersonService, AuthorizedPersonService{
     private final PersonRepository personRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -23,14 +26,16 @@ public class PersonServiceImpl implements PersonService{
 
     @Override
     public void savePerson(PersonDto person) {
-        var newPerson = new Person();
-        newPerson.setFirstName(person.getFirstName());
-        newPerson.setLastName(person.getLastName());
-        newPerson.setEmail(person.getEmail());
-        newPerson.setPhone(person.getPhone());
-        newPerson.setPassword(passwordEncoder.encode(person.getPassword()));
-        newPerson.setAvailableFiles(new ArrayList<>());
-        newPerson.setAvailableFolders(new ArrayList<>());
+        var newPerson = Person.builder()
+                .id(null)
+                .firstName(person.getFirstName())
+                .lastName(person.getLastName())
+                .email(person.getEmail())
+                .phone(person.getPhone())
+                .password(passwordEncoder.encode(person.getPassword()))
+                .availableFiles(new ArrayList<>())
+                .build();
+
         personRepository.save(newPerson);
     }
 
@@ -53,5 +58,24 @@ public class PersonServiceImpl implements PersonService{
     @Override
     public void updatePerson(Person person){
         personRepository.save(person);
+    }
+
+    @Override
+    public Optional<Person> findPerson() {
+        var details = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(details instanceof UserDetails user)
+            return Optional.ofNullable(personRepository.findByEmail(user.getUsername()));
+
+        return Optional.empty();
+    }
+
+    @Override
+    public boolean isAuthenticated() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || AnonymousAuthenticationToken.class.
+                isAssignableFrom(authentication.getClass())) {
+            return false;
+        }
+        return authentication.isAuthenticated();
     }
 }

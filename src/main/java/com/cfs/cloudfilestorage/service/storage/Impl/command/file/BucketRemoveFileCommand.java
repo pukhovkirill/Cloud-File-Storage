@@ -21,7 +21,7 @@ public class BucketRemoveFileCommand extends StorageCommand<FileDto> {
                 client.removeObject(
                         RemoveObjectArgs.builder()
                                 .bucket(BUCKET_NAME)
-                                .object(item.getName())
+                                .object(item.getPath())
                                 .build());
 
                 MinioUtility.releaseClient(client);

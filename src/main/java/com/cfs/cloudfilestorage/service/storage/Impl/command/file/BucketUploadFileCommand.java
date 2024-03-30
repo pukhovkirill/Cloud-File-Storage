@@ -24,7 +24,7 @@ public class BucketUploadFileCommand extends StorageCommand<FileDto> {
                 client.putObject(
                         PutObjectArgs.builder()
                                 .bucket(BUCKET_NAME)
-                                .object(item.getName())
+                                .object(item.getPath())
                                 .stream(new ByteArrayInputStream(buff), item.getFileSize(), -1)
                                 .contentType(item.getContentType())
                                 .build());

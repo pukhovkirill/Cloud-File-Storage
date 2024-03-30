@@ -33,5 +33,5 @@ spring:
 
   session:
     redis:
-      flush-mode: on_save
+      flush-mode: immediate
       namespace: spring:session

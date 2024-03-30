@@ -8,8 +8,6 @@ import com.cfs.cloudfilestorage.service.person.PersonService;
 import com.cfs.cloudfilestorage.service.storage.StorageCommand;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import java.sql.Timestamp;
-
 public class DBUploadFileCommand extends StorageCommand<FileDto> {
 
     private final FileRepository fileRepository;
@@ -31,17 +29,16 @@ public class DBUploadFileCommand extends StorageCommand<FileDto> {
             }
 
             var person = optionalPerson.get();
-            item.setName(String.format("user-%d-files/%s", person.getId(), item.getName()));
 
-            var file = new File(
-                    null,
-                    item.getName(),
-                    item.getPath(),
-                    item.getContentType(),
-                    new Timestamp(System.currentTimeMillis()),
-                    item.getFileSize(),
-                    person
-            );
+            var file = File.builder()
+                    .id(null)
+                    .name(item.getName())
+                    .fileName(item.getPath())
+                    .contentType(item.getContentType())
+                    .lastModified(item.getLastModified())
+                    .fileSize(item.getFileSize())
+                    .ownerEmail(person.getEmail())
+                    .build();
 
             file = fileRepository.save(file);
 

@@ -29,7 +29,7 @@ public class BucketDownloadFileCommand extends StorageCommand<FileDto> {
                 InputStream in = client.getObject(
                         GetObjectArgs.builder()
                                 .bucket(BUCKET_NAME)
-                                .object(item.getName())
+                                .object(item.getPath())
                                 .build());
 
                 byte[] buff = new byte[1024];

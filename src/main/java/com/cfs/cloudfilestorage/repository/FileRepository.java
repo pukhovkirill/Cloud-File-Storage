@@ -10,6 +10,5 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 public interface FileRepository extends CrudRepository<File, Long> {
-    @Query("select f from File f where f.owner = :owner")
-    List<File> findByOwner(@Param("owner") Person owner);
+
 }

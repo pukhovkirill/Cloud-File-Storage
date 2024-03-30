@@ -34,7 +34,7 @@ public abstract class StorageCommand<T extends StorageEntity>{
         action(entity, args);
 
         if (next != null) {
-            next.execute(entity);
+            next.execute(entity, args);
         }
     }
 

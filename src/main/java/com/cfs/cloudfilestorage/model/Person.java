@@ -43,12 +43,4 @@ public class Person {
             inverseJoinColumns = { @JoinColumn(name = "file_id", referencedColumnName = "id", nullable = false) }
     )
     private List<File> availableFiles;
-
-    @OneToMany
-    @JoinTable(
-            name = "folder_to_person",
-            joinColumns = { @JoinColumn(name = "person_id", referencedColumnName = "id", nullable = false) },
-            inverseJoinColumns = { @JoinColumn(name = "folder_id", referencedColumnName = "id", nullable = false) }
-    )
-    private List<Folder> availableFolders;
 }

@@ -21,14 +21,14 @@ public class File {
     @Column(unique = true, nullable = false)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String name;
 
-    @Column(name = "file_name", unique = true, nullable = false)
+    @Column(name = "file_name", unique = true)
     private String fileName;
 
     @Column(name = "content_type", nullable = false)
-    private String contentType;
+    private String contentType = "folder";
 
     @Column(name = "last_modified", nullable = false)
     private Timestamp lastModified;
@@ -36,7 +36,6 @@ public class File {
     @Column(name = "file_size", nullable = false)
     private int fileSize;
 
-    @OneToOne
-    @JoinColumn(name = "owner_id", referencedColumnName = "id", nullable = false)
-    private Person owner;
+    @Column(name = "owner_email", nullable = false)
+    private String ownerEmail;
 }

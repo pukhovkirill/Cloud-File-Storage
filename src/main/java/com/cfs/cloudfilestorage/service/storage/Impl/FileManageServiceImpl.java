@@ -29,6 +29,11 @@ public class FileManageServiceImpl implements FileManageService {
     }
 
     @Override
+    public void uploadMultiple(FileDto[] fileDtoArray) {
+        storageSwitch.execute("upload_multiple", null, (Object) fileDtoArray);
+    }
+
+    @Override
     public FileDto rename(FileDto item, String newName) {
         storageSwitch.execute("rename", item, newName);
         item.setName(newName);
