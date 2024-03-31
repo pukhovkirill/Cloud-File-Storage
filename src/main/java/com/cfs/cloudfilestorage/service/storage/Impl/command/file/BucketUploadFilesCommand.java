@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
-public class BucketUploadMultipleFileCommand extends StorageCommand {
+public class BucketUploadFilesCommand extends StorageCommand {
     @Override
     protected void action(StorageEntity entity, Object... args) {
         if(args[0] instanceof StorageEntity[] entities){

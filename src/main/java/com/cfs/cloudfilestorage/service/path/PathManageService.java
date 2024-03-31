@@ -9,5 +9,9 @@ public interface PathManageService {
 
     List<StorageEntity> buildStoragePath(List<StorageItem> files);
 
-    List<StorageEntity> getPath(String path);
+    List<StorageEntity> changeDirectory(String path);
+
+    List<StorageEntity> previousDirectory(String path);
+
+    List<StorageEntity> goToRoot();
 }

@@ -19,8 +19,8 @@ public class StorageConfig {
         uploadCommand.setNext(new BucketUploadFileCommand());
         storageSwitch.register("upload", uploadCommand);
 
-        StorageCommand uploadMultipleCommand = new DBUploadMultipleFileCommand(personService, itemRepository, authorizedService);
-        uploadMultipleCommand.setNext(new BucketUploadMultipleFileCommand());
+        StorageCommand uploadMultipleCommand = new DBUploadFilesCommand(personService, itemRepository, authorizedService);
+        uploadMultipleCommand.setNext(new BucketUploadFilesCommand());
         storageSwitch.register("upload_multiple", uploadMultipleCommand);
 
         StorageCommand downloadCommand = new BucketDownloadFileCommand();

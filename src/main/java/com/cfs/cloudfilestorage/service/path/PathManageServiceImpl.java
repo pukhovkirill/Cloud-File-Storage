@@ -2,6 +2,7 @@ package com.cfs.cloudfilestorage.service.path;
 
 import com.cfs.cloudfilestorage.aps.APS;
 import com.cfs.cloudfilestorage.aps.AbstractPathTree;
+import com.cfs.cloudfilestorage.aps.PathView;
 import com.cfs.cloudfilestorage.dto.StorageEntity;
 import com.cfs.cloudfilestorage.model.StorageItem;
 import com.cfs.cloudfilestorage.service.person.AuthorizedPersonService;
@@ -24,14 +25,54 @@ public class PathManageServiceImpl implements PathManageService, PathConvertServ
 
     @Override
     public String getFileName(String path) {
-        var oPath = Paths.get(path);
-        return oPath.getFileName().toString();
+        try{
+            var oPath = Paths.get(path);
+            return oPath.getFileName().toString();
+        }catch (Exception e){
+            return "";
+        }
     }
 
     @Override
     public String getFullName(String path) {
-        var root = getPersonRootFolder();
-        return String.format("%s/%s", root, path);
+        try{
+            var root = getPersonRootFolder();
+            return String.format("%s/%s", root, path);
+        }catch (Exception e){
+            return "";
+        }
+    }
+
+    @Override
+    public String getParent(String path) {
+        try{
+            var oPath = Paths.get(path);
+            return oPath.getParent().toString();
+        }catch (Exception e){
+            return "";
+        }
+    }
+
+    @Override
+    public PathView getPathView(String path) {
+        var parent = getParent(path);
+        var workingDirectory = getFileFolder(path);
+
+        return PathView.builder()
+                .path(parent.split("/"))
+                .workingDirectory(workingDirectory)
+                .build();
+    }
+
+    private String getFileFolder(String path){
+        try{
+            var parent = getParent(path);
+            return path
+                    .replace(parent+"/", "")
+                    .replace(getFileName(path), "");
+        }catch (Exception e){
+            return "";
+        }
     }
 
     private String getPersonRootFolder(){
@@ -66,9 +107,18 @@ public class PathManageServiceImpl implements PathManageService, PathConvertServ
     }
 
     @Override
-    public List<StorageEntity> getPath(String path) {
+    public List<StorageEntity> changeDirectory(String path) {
         return null;
     }
 
+    @Override
+    public List<StorageEntity> previousDirectory(String path) {
+        return null;
+    }
+
+    @Override
+    public List<StorageEntity> goToRoot() {
+        return null;
+    }
 
 }

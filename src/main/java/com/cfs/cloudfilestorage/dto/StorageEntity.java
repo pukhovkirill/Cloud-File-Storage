@@ -17,25 +17,25 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 public class StorageEntity {
 
-    protected Long id;
+    private Long id;
 
     @NotBlank
-    protected String name;
+    private String name;
 
     @NotBlank
-    protected String path;
+    private String path;
 
     @NotBlank
-    protected String contentType;
+    private String contentType;
 
     @NotNull
-    protected Timestamp lastModified;
+    private Timestamp lastModified;
 
     @NotNull
-    protected int size;
+    private int size;
 
     @NotNull
-    protected String owner;
+    private String owner;
 
     @NotEmpty
     private byte[] bytes;

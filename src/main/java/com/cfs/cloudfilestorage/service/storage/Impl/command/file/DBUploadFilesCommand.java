@@ -5,8 +5,8 @@ import com.cfs.cloudfilestorage.repository.ItemRepository;
 import com.cfs.cloudfilestorage.service.person.AuthorizedPersonService;
 import com.cfs.cloudfilestorage.service.person.PersonService;
 
-public class DBUploadMultipleFileCommand extends DBUploadFileCommand{
-    public DBUploadMultipleFileCommand(PersonService personService, ItemRepository itemRepository, AuthorizedPersonService authorizedPersonService) {
+public class DBUploadFilesCommand extends DBUploadFileCommand{
+    public DBUploadFilesCommand(PersonService personService, ItemRepository itemRepository, AuthorizedPersonService authorizedPersonService) {
         super(personService, itemRepository, authorizedPersonService);
     }
 
