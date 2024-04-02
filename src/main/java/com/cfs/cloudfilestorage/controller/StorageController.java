@@ -6,35 +6,33 @@ import com.cfs.cloudfilestorage.model.Person;
 import com.cfs.cloudfilestorage.service.path.PathConvertService;
 import com.cfs.cloudfilestorage.service.path.PathManageService;
 import com.cfs.cloudfilestorage.service.person.AuthorizedPersonService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import com.cfs.cloudfilestorage.service.storage.ItemManageService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.Base64;
 import java.util.List;
 
 @Controller
-public class StorageController {
+public class StorageController extends StorageBaseController {
 
-    private final AuthorizedPersonService authorizedPersonService;
-    private final PathManageService pathManageService;
-    private final PathConvertService pathConvertService;
-
-    public StorageController(
-            AuthorizedPersonService authorizedPersonService,
-            PathManageService pathManageService,
-            PathConvertService pathConvertService){
-        this.authorizedPersonService = authorizedPersonService;
-        this.pathManageService = pathManageService;
-        this.pathConvertService = pathConvertService;
+    public StorageController(PathManageService pathManageService,
+                             ItemManageService itemManageService,
+                             PathConvertService pathConvertService,
+                             AuthorizedPersonService authorizedPersonService) {
+        super(pathManageService, itemManageService, pathConvertService, authorizedPersonService);
     }
 
     @GetMapping("/vault")
     public String showRootFolder(Model model){
         var person = findPerson();
-        var content = pathManageService.buildStoragePath(person.getAvailableItems());
-        fillStorage(content, person, model);
+
+        pathManageService.buildStoragePath(person.getAvailableItems());
+        var content = pathManageService.goToRoot();
+
+        fillStorage(content, person, model, null, "/vault");
         return "home";
     }
 
@@ -42,37 +40,40 @@ public class StorageController {
     public String showFolders(@PathVariable String path, Model model){
         var person = findPerson();
 
+        var decodePath = new String(Base64.getDecoder().decode(path.getBytes()));
         pathManageService.buildStoragePath(person.getAvailableItems());
-        var content = pathManageService.changeDirectory(path);
+        var content = pathManageService.changeDirectory(decodePath);
 
-        fillStorage(content, person, model);
+        fillStorage(content, person, model, decodePath, String.format("/folders/%s", path));
         return "home";
     }
 
-    private Person findPerson(){
-        var optPerson = authorizedPersonService.findPerson();
+    @GetMapping("/previous/{path}")
+    public String showPreviousFolder(@PathVariable String path){
 
-        if(optPerson.isEmpty()){
-            throw new UsernameNotFoundException("Person not found");
-        }
+        var decodePath = new String(Base64.getDecoder().decode(path.getBytes()));
+        decodePath = pathConvertService.getParent(decodePath);
+        decodePath = Base64.getEncoder().encodeToString(decodePath.getBytes());
 
-        return optPerson.get();
+        return String.format("redirect:/folders/%s", decodePath);
     }
 
-    private void fillStorage(List<StorageEntity> content, Person person, Model model){
-        PathView pathView = PathView.builder()
-                .path(new String[0])
-                .workingDirectory("")
-                .build();
 
-        if(!content.isEmpty()){
-            var element = content.getFirst();
-            pathView = pathConvertService.getPathView(element.getPath());
+    private void fillStorage(List<StorageEntity> content, Person person, Model model, String currentPath, String workingDirectory){
+        PathView pathView;
+        if(currentPath == null){
+            pathView = PathView.builder()
+                    .path(new String[0])
+                    .workingDirectory("")
+                    .build();
+        }else{
+            pathView = pathConvertService.getPathView(currentPath);
         }
 
         model.addAttribute("person", person);
         model.addAttribute("content", content);
         model.addAttribute("pathView", pathView);
-        model.addAttribute("root", "user-"+person.getId()+"-files");
+        model.addAttribute("workingDirectory", workingDirectory);
+        model.addAttribute("root", String.format("user-%d-files", person.getId()));
     }
 }

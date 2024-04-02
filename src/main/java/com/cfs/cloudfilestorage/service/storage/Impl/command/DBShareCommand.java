@@ -1,4 +1,4 @@
-package com.cfs.cloudfilestorage.service.storage.Impl.command.file;
+package com.cfs.cloudfilestorage.service.storage.Impl.command;
 
 import com.cfs.cloudfilestorage.dto.StorageEntity;
 import com.cfs.cloudfilestorage.repository.ItemRepository;
@@ -8,13 +8,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.io.FileNotFoundException;
 
-public class DBShareFileCommand extends StorageCommand {
+public class DBShareCommand extends StorageCommand {
 
     private final ItemRepository itemRepository;
 
     private final PersonService personService;
 
-    public DBShareFileCommand(ItemRepository itemRepository, PersonService personService){
+    public DBShareCommand(ItemRepository itemRepository, PersonService personService){
         this.itemRepository = itemRepository;
         this.personService = personService;
     }

@@ -7,11 +7,13 @@ import java.util.List;
 
 public interface PathManageService {
 
-    List<StorageEntity> buildStoragePath(List<StorageItem> files);
+    void buildStoragePath(List<StorageItem> files);
 
     List<StorageEntity> changeDirectory(String path);
 
     List<StorageEntity> previousDirectory(String path);
 
     List<StorageEntity> goToRoot();
+
+    boolean pathExists(String path);
 }

@@ -1,4 +1,4 @@
-package com.cfs.cloudfilestorage.service.storage.Impl.command.file;
+package com.cfs.cloudfilestorage.service.storage.Impl.command;
 
 import com.cfs.cloudfilestorage.dto.StorageEntity;
 import com.cfs.cloudfilestorage.repository.ItemRepository;
@@ -6,11 +6,11 @@ import com.cfs.cloudfilestorage.service.storage.StorageCommand;
 
 import java.io.FileNotFoundException;
 
-public class DBRenameFileCommand extends StorageCommand {
+public class DBRenameCommand extends StorageCommand {
 
     private final ItemRepository itemRepository;
 
-    public DBRenameFileCommand(ItemRepository itemRepository){
+    public DBRenameCommand(ItemRepository itemRepository){
         this.itemRepository = itemRepository;
     }
 

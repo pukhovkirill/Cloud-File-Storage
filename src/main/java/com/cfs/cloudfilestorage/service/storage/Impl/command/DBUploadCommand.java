@@ -1,4 +1,4 @@
-package com.cfs.cloudfilestorage.service.storage.Impl.command.file;
+package com.cfs.cloudfilestorage.service.storage.Impl.command;
 
 import com.cfs.cloudfilestorage.dto.StorageEntity;
 import com.cfs.cloudfilestorage.model.StorageItem;
@@ -8,7 +8,7 @@ import com.cfs.cloudfilestorage.service.person.PersonService;
 import com.cfs.cloudfilestorage.service.storage.StorageCommand;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-public class DBUploadFileCommand extends StorageCommand{
+public class DBUploadCommand extends StorageCommand{
 
     private final ItemRepository itemRepository;
 
@@ -16,7 +16,7 @@ public class DBUploadFileCommand extends StorageCommand{
 
     private final PersonService personService;
 
-    public DBUploadFileCommand(
+    public DBUploadCommand(
             PersonService personService,
             ItemRepository itemRepository,
             AuthorizedPersonService authorizedPersonService){

@@ -1,4 +1,4 @@
-package com.cfs.cloudfilestorage.service.storage.Impl.command.file;
+package com.cfs.cloudfilestorage.service.storage.Impl.command;
 
 import com.cfs.cloudfilestorage.dto.StorageEntity;
 import com.cfs.cloudfilestorage.service.storage.StorageCommand;
@@ -10,7 +10,7 @@ import java.io.*;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
-public class BucketUploadFileCommand extends StorageCommand {
+public class BucketUploadCommand extends StorageCommand {
 
     @Override
     protected void action(StorageEntity entity, Object ... args){
@@ -19,13 +19,17 @@ public class BucketUploadFileCommand extends StorageCommand {
 
             byte[] buff = entity.getBytes();
 
+            var putBuilder = PutObjectArgs.builder()
+                    .bucket(BUCKET_NAME)
+                    .object(entity.getPath())
+                    .stream(new ByteArrayInputStream(buff), entity.getSize(), -1);
+
+            if(!entity.getContentType().equals("folder"))
+                putBuilder.contentType(entity.getContentType());
+
             client.putObject(
-                    PutObjectArgs.builder()
-                            .bucket(BUCKET_NAME)
-                            .object(entity.getPath())
-                            .stream(new ByteArrayInputStream(buff), entity.getSize(), -1)
-                            .contentType(entity.getContentType())
-                            .build());
+                    putBuilder.build()
+            );
 
             MinioUtility.releaseClient(client);
 

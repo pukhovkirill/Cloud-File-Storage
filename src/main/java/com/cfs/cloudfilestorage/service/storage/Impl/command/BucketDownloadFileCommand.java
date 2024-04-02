@@ -1,4 +1,4 @@
-package com.cfs.cloudfilestorage.service.storage.Impl.command.file;
+package com.cfs.cloudfilestorage.service.storage.Impl.command;
 
 import com.cfs.cloudfilestorage.dto.StorageEntity;
 import com.cfs.cloudfilestorage.service.storage.StorageCommand;
@@ -16,6 +16,10 @@ public class BucketDownloadFileCommand extends StorageCommand {
 
     @Override
     protected void action(StorageEntity entity, Object ... args) {
+
+        if(entity.getContentType().equals("folder"))
+            return;
+
         try{
             var client = MinioUtility.getClient();
 

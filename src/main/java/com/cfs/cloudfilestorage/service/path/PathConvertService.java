@@ -4,6 +4,10 @@ import com.cfs.cloudfilestorage.aps.PathView;
 
 public interface PathConvertService {
 
+    String createFolderName(String folderName, String currentPath);
+
+    String createFileName(String fileName, String currentPath);
+
     String getFileName(String path);
 
     String getFullName(String path);

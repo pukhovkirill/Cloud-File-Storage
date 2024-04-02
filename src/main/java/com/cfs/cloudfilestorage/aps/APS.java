@@ -7,15 +7,11 @@ import java.util.List;
 
 public interface APS {
 
-    TreeState saveState();
+    Iterator<AbstractPathTree.PathNode> getRoot();
 
-    void restoreState(TreeState state);
+    boolean pathExists(String path);
 
-    void addFile(StorageEntity fileDto);
+    Iterator<AbstractPathTree.PathNode> getFolder(String folder);
 
-    void addFolder(StorageEntity folderDto);
-
-    Iterator<AbstractPathTree.PathNode> getFolder(StorageEntity folderDto);
-
-    Iterator<AbstractPathTree.PathNode> buildTreeByPath(List<StorageEntity> entities);
+    void buildTreeByPath(List<StorageEntity> entities);
 }

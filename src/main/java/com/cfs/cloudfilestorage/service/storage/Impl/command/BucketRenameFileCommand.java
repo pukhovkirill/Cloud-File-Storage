@@ -1,25 +1,36 @@
-package com.cfs.cloudfilestorage.service.storage.Impl.command.file;
+package com.cfs.cloudfilestorage.service.storage.Impl.command;
 
 import com.cfs.cloudfilestorage.dto.StorageEntity;
 import com.cfs.cloudfilestorage.service.storage.StorageCommand;
 import com.cfs.cloudfilestorage.util.MinioUtility;
-import io.minio.RemoveObjectArgs;
+import io.minio.CopyObjectArgs;
+import io.minio.CopySource;
 import io.minio.errors.MinioException;
 
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
-public class BucketRemoveFileCommand extends StorageCommand {
+public class BucketRenameFileCommand extends StorageCommand {
     @Override
     protected void action(StorageEntity entity, Object ... args) {
+
+        if(entity.getContentType().equals("folder"))
+            return;
+
+        String newFileName = (String)args[0];
         try{
             var client = MinioUtility.getClient();
 
-            client.removeObject(
-                    RemoveObjectArgs.builder()
+            client.copyObject(
+                    CopyObjectArgs.builder()
                             .bucket(BUCKET_NAME)
                             .object(entity.getPath())
+                            .source(
+                                    CopySource.builder()
+                                            .bucket(BUCKET_NAME)
+                                            .object(newFileName)
+                                            .build())
                             .build());
 
             MinioUtility.releaseClient(client);

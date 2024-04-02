@@ -26,33 +26,6 @@ public class AbstractPathTree implements APS{
                 .build();
     }
 
-    @Override
-    public TreeState saveState() {
-        return TreeState.builder()
-                .type(TokenType.FOLDER)
-                .name(this.root.token.name)
-                .path(this.root.token.path)
-                .entity(this.root.token.dto)
-                .children(this.root.children)
-                .build();
-    }
-
-    @Override
-    public void restoreState(TreeState state) {
-
-        var token = Token.builder()
-                .type(state.getType())
-                .name(state.getName())
-                .path(state.getPath())
-                .dto(state.getEntity())
-                .build();
-
-        this.root = PathNode.builder()
-                .token(token)
-                .children(state.getChildren())
-                .build();
-    }
-
     @Builder
     private static class Token{
         private TokenType type;
@@ -92,80 +65,39 @@ public class AbstractPathTree implements APS{
         }
     }
 
+
     @Override
-    public void addFile(StorageEntity fileDto){
-        if(!isExist(fileDto)){
-            var folderPath = fileDto.getPath().replace(fileDto.getName(), "");
-            var folder = find(
-                    StorageEntity.builder()
-                    .path(folderPath)
-                    .build()
-            );
-
-            if(folder == null){
-                return;
-            }
-
-            var token = Token.builder()
-                    .name(fileDto.getName())
-                    .path(fileDto.getPath())
-                    .type(TokenType.FILE)
-                    .build();
-
-            var node = PathNode.builder()
-                    .token(token)
-                    .build();
-
-            folder.addChild(node);
-        }
+    public Iterator<PathNode> getRoot() {
+        return this.root.getChildren();
     }
 
     @Override
-    public void addFolder(StorageEntity folderDto){
-        if(!isExist(folderDto)){
-            var folderPath = folderDto.getPath().replace(folderDto.getName(), "");
-            var folder = find(
-                    StorageEntity.builder()
-                            .path(folderPath)
-                            .build()
-            );
-
-            if(folder == null){
-                return;
-            }
-
-            var token = Token.builder()
-                    .name(folderDto.getName())
-                    .path((folderDto.getPath()))
-                    .type(TokenType.FOLDER)
-                    .build();
-
-            var node = PathNode.builder()
-                    .token(token)
-                    .children(new ArrayList<>())
-                    .build();
-
-            folder.addChild(node);
-        }
+    public boolean pathExists(String path) {
+        return find(path) != null;
     }
 
     @Override
-    public Iterator<PathNode> getFolder(StorageEntity entity){
-        return find(entity).getChildren();
+    public Iterator<PathNode> getFolder(String folder){
+        var pathNode = find(folder);
+
+        if(pathNode == null)
+            return null;
+
+        return find(folder).getChildren();
     }
 
     @Override
-    public Iterator<PathNode> buildTreeByPath(List<StorageEntity> entities) {
+    public void buildTreeByPath(List<StorageEntity> entities) {
         for(var entity : entities){
             var root = find(entity);
             if(root == null){
                 if(entity.getContentType().equals("folder")){
-                    buildFoldersByPath(entity.getPath());
+                    buildFoldersByPath(entity.getPath(), entity);
                     continue;
                 }
 
                 var folderPath = entity.getPath().replace(entity.getName(), "");
-                root = buildFoldersByPath(folderPath);
+                root = buildFoldersByPath(folderPath, entity);
             }
 
             var token = Token.builder()
@@ -181,26 +113,33 @@ public class AbstractPathTree implements APS{
 
             root.addChild(node);
         }
-
-        return this.root.getChildren();
     }
 
-    private PathNode buildFoldersByPath(String path){
+    private PathNode buildFoldersByPath(String path, StorageEntity entity){
         PathNode start = this.root;
 
         var folders = path.split("/");
         var lastFolder = folders[folders.length-1];
         var nextPath = path.replace(lastFolder+"/", "");
 
-        if(find(path) == null)
-            start = buildFoldersByPath(nextPath);
+        if((start = find(path)) == null)
+            start = buildFoldersByPath(nextPath, entity);
         else
             return start;
+
+        var dto = StorageEntity.builder()
+                .name(lastFolder)
+                .path(path)
+                .owner(entity.getOwner())
+                .lastModified(entity.getLastModified())
+                .contentType("folder")
+                .build();
 
         var token = Token.builder()
                 .type(TokenType.FOLDER)
                 .name(lastFolder)
-                .path(nextPath)
+                .path(path)
+                .dto(dto)
                 .build();
 
         var node = PathNode.builder()
@@ -256,7 +195,9 @@ public class AbstractPathTree implements APS{
         @Override
         public PathNode next() {
             var path = queue.poll();
-            queue.addAll(path.children);
+
+            if(path.children != null)
+                queue.addAll(path.children);
 
             return path;
         }

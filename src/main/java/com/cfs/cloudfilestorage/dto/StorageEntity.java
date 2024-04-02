@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
+import java.util.Base64;
 
 @Getter
 @Setter
@@ -40,6 +42,8 @@ public class StorageEntity {
     @NotEmpty
     private byte[] bytes;
 
+    private byte[][] bytesMatrix;
+
     public StorageEntity(StorageItem item){
         this.id = item.getId();
         this.name = item.getName();
@@ -48,5 +52,9 @@ public class StorageEntity {
         this.owner = item.getOwnerEmail();
         this.contentType = item.getContentType();
         this.lastModified = item.getLastModified();
+    }
+
+    public String pathToBase64(){
+        return Base64.getEncoder().encodeToString(this.path.getBytes());
     }
 }
