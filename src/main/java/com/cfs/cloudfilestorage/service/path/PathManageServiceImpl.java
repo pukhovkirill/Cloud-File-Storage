@@ -100,6 +100,15 @@ public class PathManageServiceImpl implements PathManageService, PathConvertServ
         }
     }
 
+    private String getCleanName(String path){
+        try{
+            var oPath = Paths.get(path);
+            return oPath.getFileName().toString();
+        }catch (Exception e){
+            return "";
+        }
+    }
+
     @Override
     public String getFullName(String path) {
         try{
@@ -136,7 +145,7 @@ public class PathManageServiceImpl implements PathManageService, PathConvertServ
 
     private String removeLastSlash(String path){
         var parent = getParent(path);
-        var name = getFileName(path);
+        var name = getCleanName(path);
         return parent+"/"+name;
     }
 

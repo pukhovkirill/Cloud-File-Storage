@@ -5,6 +5,7 @@
     <title>Home</title>
     <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.css" th:href="@{/css/bootstrap.css}">
     <script src="/static/js/bootstrap.bundle.js" type="text/javascript" th:src="@{/js/bootstrap.bundle.js}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <style>
         .breadcrumb-chevron {
             --bs-breadcrumb-divider: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236c757d'%3E%3Cpath fill-rule='evenodd' d='M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
@@ -200,6 +201,7 @@
                             </li>
                         </ol>
                     </nav>
+
                     <div id="storage" class="element-center p-3" style="min-height: 100vh">
                         <table class="table table-light table-hover">
                             <thead>
@@ -211,20 +213,55 @@
                                     <th scope="col">Location</th>
                                 </tr>
                             </thead>
+<!--                            <tbody th:hidden="${content.isEmpty()}">-->
+<!--                            <tr th:each="entity : ${content}" id="clickable-row" class='clickable-row' >-->
+<!--                                <td class="d-none" th:if="${entity.contentType.equals('folder')}" th:text="${'/folders/'+entity.pathToBase64()}" id="folder-path"></td>-->
+<!--                                <td th:if="${entity.contentType.equals('folder')}"><a th:href="@{/folders/{path}(path=${entity.pathToBase64()})}" th:text="${entity.name}"></a></td>-->
+<!--                                <td th:unless="${entity.contentType.equals('folder')}" th:text="${entity.name}">file</td>-->
+<!--                                <td th:text="${entity.name}">file</td>-->
+<!--                                <td th:text="${entity.owner.equals(person.email) ? 'me' : entity.owner}">me</td>-->
+<!--                                <td th:text="${#dates.format(entity.lastModified, 'HH:mm')}">15:21</td>-->
+<!--                                <td th:text="${entity.size} + ' byte'">3 kb</td>-->
+<!--                                <td th:text="${entity.owner.equals(person.email) ? 'my vault' : 'available to me'}">my vault</td>-->
+<!--                            </tr>-->
+<!--                            </tbody>-->
                             <tbody th:hidden="${content.isEmpty()}">
                             <tr th:each="entity : ${content}">
-                                <td th:if="${entity.contentType.equals('folder')}"><a th:href="@{/folders/{path}(path=${entity.pathToBase64()})}" th:text="${entity.name}"></a></td>
-                                <td th:unless="${entity.contentType.equals('folder')}" th:text="${entity.name}">file</td>
-                                <td th:text="${entity.owner.equals(person.email) ? 'me' : entity.owner}">me</td>
-                                <td th:text="${#dates.format(entity.lastModified, 'HH:mm')}">15:21</td>
-                                <td th:text="${entity.size} + ' byte'">3 kb</td>
-                                <td th:text="${entity.owner.equals(person.email) ? 'my vault' : 'available to me'}">my vault</td>
+                                <td>
+                                    <a class="nav-link" th:if="${entity.contentType.equals('folder')}" th:href="@{/folders/{path}(path=${entity.pathToBase64()})}" th:text="${entity.name}"></a>
+                                    <div th:unless="${entity.contentType.equals('folder')}" th:text="${entity.name}"></div>
+                                </td>
+                                <td>
+                                    <a class="nav-link" th:if="${entity.contentType.equals('folder')}"  th:href="@{/folders/{path}(path=${entity.pathToBase64()})}" th:text="${entity.owner.equals(person.email) ? 'me' : entity.owner}"></a>
+                                    <div th:unless="${entity.contentType.equals('folder')}" th:text="${entity.owner.equals(person.email) ? 'me' : entity.owner}"></div>
+                                </td>
+                                <td>
+                                    <a class="nav-link" th:if="${entity.contentType.equals('folder')}" th:href="@{/folders/{path}(path=${entity.pathToBase64()})}" th:text="${#dates.format(entity.lastModified, 'HH:mm')}"></a>
+                                    <div th:unless="${entity.contentType.equals('folder')}" th:text="${#dates.format(entity.lastModified, 'HH:mm')}">15:21</div>
+                                </td>
+                                <td>
+                                    <a class="nav-link" th:if="${entity.contentType.equals('folder')}" th:href="@{/folders/{path}(path=${entity.pathToBase64()})}" th:text="${entity.size} + ' byte'"></a>
+                                    <div th:unless="${entity.contentType.equals('folder')}" th:text="${entity.size} + ' byte'">3 kb</div>
+                                </td>
+                                <td>
+                                    <a class="nav-link" th:if="${entity.contentType.equals('folder')}" th:href="@{/folders/{path}(path=${entity.pathToBase64()})}" th:text="${entity.owner.equals(person.email) ? 'my vault' : 'available to me'}"></a>
+                                    <div th:unless="${entity.contentType.equals('folder')}" th:text="${entity.owner.equals(person.email) ? 'my vault' : 'available to me'}">my vault</div>
+                                </td>
                             </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </main>
+            <script>
+                jQuery(document).ready(function($) {
+                    $("#clickable-row").click(function() {
+                        let href = document.getElementById('folder-path').innerText;
+                        console.log("url://"+href)
+                        window.location = $(this).data("url://"+href);
+                    });
+                });
+            </script>
 
             <!-- Modal windows -->
 

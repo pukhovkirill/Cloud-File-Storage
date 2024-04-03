@@ -21,7 +21,7 @@ public class StorageItem {
     @Column(unique = true, nullable = false)
     private Long id;
 
-    @Column(unique = true)
+    @Column
     private String name;
 
     @Column(name = "item_name", unique = true)

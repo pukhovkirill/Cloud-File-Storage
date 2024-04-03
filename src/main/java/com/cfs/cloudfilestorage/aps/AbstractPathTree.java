@@ -116,11 +116,11 @@ public class AbstractPathTree implements APS{
     }
 
     private PathNode buildFoldersByPath(String path, StorageEntity entity){
-        PathNode start = this.root;
+        PathNode start;
 
         var folders = path.split("/");
         var lastFolder = folders[folders.length-1];
-        var nextPath = path.replace(lastFolder+"/", "");
+        var nextPath = replaceLast(path, lastFolder+"/", "");
 
         if((start = find(path)) == null)
             start = buildFoldersByPath(nextPath, entity);
@@ -149,6 +149,17 @@ public class AbstractPathTree implements APS{
 
         start.addChild(node);
         return start;
+    }
+
+    public static String replaceLast(String string, String toReplace, String replacement) {
+        int pos = string.lastIndexOf(toReplace);
+        if (pos > -1) {
+            return string.substring(0, pos)
+                    + replacement
+                    + string.substring(pos + toReplace.length());
+        } else {
+            return string;
+        }
     }
 
     private boolean isExist(StorageEntity entity){
