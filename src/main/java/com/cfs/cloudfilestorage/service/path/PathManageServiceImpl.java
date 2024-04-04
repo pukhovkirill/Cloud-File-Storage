@@ -91,7 +91,7 @@ public class PathManageServiceImpl implements PathManageService, PathConvertServ
             var oPath = Paths.get(path);
             var result = oPath.getFileName().toString();
 
-            if(path.charAt(path.length()-1) == '/')
+            if(path.endsWith("/"))
                 result += "/";
 
             return result;
@@ -141,6 +141,11 @@ public class PathManageServiceImpl implements PathManageService, PathConvertServ
                 .workingDirectory(workingDirectory)
                 .fullPath(fullPath)
                 .build();
+    }
+
+    @Override
+    public boolean isFolder(String path) {
+        return path.endsWith("/");
     }
 
     private String removeLastSlash(String path){

@@ -15,4 +15,6 @@ public interface PathConvertService {
     String getParent(String path);
 
     PathView getPathView(String path);
+
+    boolean isFolder(String path);
 }

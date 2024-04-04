@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Base64;
 import java.util.List;
@@ -48,14 +49,26 @@ public class StorageController extends StorageBaseController {
         return "home";
     }
 
-    @GetMapping("/previous/{path}")
-    public String showPreviousFolder(@PathVariable String path){
+    @GetMapping("/previous/{path}/details")
+    public String showPreviousFolder(@PathVariable String path, @RequestParam("index") Integer index){
 
+        var previous = getPreviousPath(path, index);
+        previous = Base64.getEncoder().encodeToString(previous.getBytes());
+
+        return String.format("redirect:/folders/%s", previous);
+    }
+
+    private String getPreviousPath(String path, int index){
         var decodePath = new String(Base64.getDecoder().decode(path.getBytes()));
-        decodePath = pathConvertService.getParent(decodePath);
-        decodePath = Base64.getEncoder().encodeToString(decodePath.getBytes());
 
-        return String.format("redirect:/folders/%s", decodePath);
+        var pathView = pathConvertService.getPathView(decodePath);
+        StringBuilder newPath = new StringBuilder();
+
+        for(int i = 0; i <= index; i++){
+            newPath.append(pathView.getPath()[i]).append("/");
+        }
+
+        return newPath.toString();
     }
 
 
