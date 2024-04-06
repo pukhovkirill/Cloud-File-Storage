@@ -8,7 +8,7 @@ public interface StorageManageService{
 
     StorageEntity upload(StorageEntity item);
 
-    StorageEntity rename(StorageEntity item, String newName);
+    StorageEntity rename(StorageEntity item, String newName, String newPath);
 
     StorageEntity download(StorageEntity item);
 

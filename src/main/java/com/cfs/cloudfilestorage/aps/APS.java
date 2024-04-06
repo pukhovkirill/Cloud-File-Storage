@@ -9,6 +9,8 @@ public interface APS {
 
     Iterator<AbstractPathTree.PathNode> getRoot();
 
+    Iterator<AbstractPathTree.PathNode> getTreeIterator();
+
     boolean pathExists(String path);
 
     Iterator<AbstractPathTree.PathNode> getFolder(String folder);

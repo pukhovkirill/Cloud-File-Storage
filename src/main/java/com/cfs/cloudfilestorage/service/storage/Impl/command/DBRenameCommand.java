@@ -17,6 +17,7 @@ public class DBRenameCommand extends StorageCommand {
     @Override
     protected void action(StorageEntity entity, Object ... args) {
         String newFileName = (String) args[0];
+        String newFilePath = (String) args[1];
         try {
             var optItem = itemRepository.findById(entity.getId());
 
@@ -26,6 +27,7 @@ public class DBRenameCommand extends StorageCommand {
 
             var item = optItem.get();
             item.setName(newFileName);
+            item.setPath(newFilePath);
 
             itemRepository.save(item);
         } catch (FileNotFoundException e) {

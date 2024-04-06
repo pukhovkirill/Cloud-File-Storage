@@ -25,18 +25,19 @@ public class StorageConfig {
         uploadMultipleCommand.setNext(new BucketUploadMultipleCommand());
         storageSwitch.register("upload_multiple", uploadMultipleCommand);
 
-        StorageCommand downloadCommand = new BucketDownloadFileCommand();
-        downloadCommand.setNext(new BucketDownloadFolderCommand());
+        StorageCommand downloadCommand = new BucketDownloadCommand();
         storageSwitch.register("download", downloadCommand);
 
         StorageCommand removeCommand = new DBRemoveCommand(itemRepository);
-        removeCommand.setNext(new BucketRemoveFileCommand());
-        removeCommand.setNext(new BucketDownloadFolderCommand());
+        removeCommand
+                .setNext(new BucketRemoveCommand());
         storageSwitch.register("remove", removeCommand);
 
         StorageCommand renameCommand = new DBRenameCommand(itemRepository);
-        renameCommand.setNext(new BucketRenameFileCommand());
-        removeCommand.setNext(new BucketDownloadFolderCommand());
+        renameCommand
+                .setNext(new BucketRenameFileCommand())
+                .setNext(new BucketRenameFolderCommand())
+                .setNext(new BucketRemoveCommand());
         storageSwitch.register("rename", renameCommand);
 
         StorageCommand shareCommand = new DBShareCommand(itemRepository, personService);

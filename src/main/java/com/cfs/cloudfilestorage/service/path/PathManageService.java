@@ -11,7 +11,9 @@ public interface PathManageService {
 
     List<StorageEntity> changeDirectory(String path);
 
-    List<StorageEntity> previousDirectory(String path);
+    List<StorageEntity> getAllFiles();
+
+    List<StorageEntity> getAllDirectory();
 
     List<StorageEntity> goToRoot();
 

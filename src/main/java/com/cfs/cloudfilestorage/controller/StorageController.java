@@ -1,8 +1,6 @@
 package com.cfs.cloudfilestorage.controller;
 
 import com.cfs.cloudfilestorage.aps.PathView;
-import com.cfs.cloudfilestorage.dto.StorageEntity;
-import com.cfs.cloudfilestorage.model.Person;
 import com.cfs.cloudfilestorage.service.path.PathConvertService;
 import com.cfs.cloudfilestorage.service.path.PathManageService;
 import com.cfs.cloudfilestorage.service.person.AuthorizedPersonService;
@@ -14,7 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Base64;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class StorageController extends StorageBaseController {
@@ -28,24 +27,50 @@ public class StorageController extends StorageBaseController {
 
     @GetMapping("/vault")
     public String showRootFolder(Model model){
+        Map<String, Object> attributes = new HashMap<>();
+
         var person = findPerson();
 
         pathManageService.buildStoragePath(person.getAvailableItems());
         var content = pathManageService.goToRoot();
+        var allFiles = pathManageService.getAllFiles();
+        var allFolders = pathManageService.getAllDirectory();
 
-        fillStorage(content, person, model, null, "/vault");
+        setCurrentPath("", attributes);
+
+        attributes.put("person", person);
+        attributes.put("content", content);
+        attributes.put("allFiles", allFiles);
+        attributes.put("allFolders", allFolders);
+        attributes.put("workingDirectory", "/vault");
+        attributes.put("root", String.format("user-%d-files", person.getId()));
+
+        fillStorage(model, attributes);
         return "home";
     }
 
     @GetMapping("/folders/{path}")
     public String showFolders(@PathVariable String path, Model model){
+        Map<String, Object> attributes = new HashMap<>();
+
         var person = findPerson();
 
         var decodePath = new String(Base64.getDecoder().decode(path.getBytes()));
         pathManageService.buildStoragePath(person.getAvailableItems());
         var content = pathManageService.changeDirectory(decodePath);
+        var allFiles = pathManageService.getAllFiles();
+        var allFolders = pathManageService.getAllDirectory();
 
-        fillStorage(content, person, model, decodePath, String.format("/folders/%s", path));
+        setCurrentPath(decodePath, attributes);
+
+        attributes.put("person", person);
+        attributes.put("content", content);
+        attributes.put("allFiles", allFiles);
+        attributes.put("allFolders", allFolders);
+        attributes.put("workingDirectory", String.format("/folders/%s", path));
+        attributes.put("root", String.format("user-%d-files", person.getId()));
+
+        fillStorage(model, attributes);
         return "home";
     }
 
@@ -71,22 +96,23 @@ public class StorageController extends StorageBaseController {
         return newPath.toString();
     }
 
-
-    private void fillStorage(List<StorageEntity> content, Person person, Model model, String currentPath, String workingDirectory){
+    private void setCurrentPath(String currentPath, Map<String, Object> attributes){
         PathView pathView;
-        if(currentPath == null){
+        if(currentPath.isEmpty()){
             pathView = PathView.builder()
                     .path(new String[0])
                     .workingDirectory("")
+                    .fullPath("")
                     .build();
         }else{
             pathView = pathConvertService.getPathView(currentPath);
         }
+        attributes.put("pathView", pathView);
+    }
 
-        model.addAttribute("person", person);
-        model.addAttribute("content", content);
-        model.addAttribute("pathView", pathView);
-        model.addAttribute("workingDirectory", workingDirectory);
-        model.addAttribute("root", String.format("user-%d-files", person.getId()));
+    private void fillStorage(Model model, Map<String, Object> attributes){
+        for(var key : attributes.keySet()){
+            model.addAttribute(key, attributes.get(key));
+        }
     }
 }

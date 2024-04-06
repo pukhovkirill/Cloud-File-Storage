@@ -14,13 +14,14 @@ function addToChosen(e){
     }
 }
 
-function b64DecodeUnicode(str) {
-    return decodeURIComponent(atob(str).split('').map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
+function clearFilesMap(){
+    files.clear();
 }
 
 function download(){
+    if(files.size === 0)
+        return;
+
     let data = [];
     for (const value of files.values()) {
         data.push(value);
@@ -30,23 +31,52 @@ function download(){
         row.classList.remove('table-active');
     }
 
+    let nameLen = 0;
+    let offset = 4;
+
+    function readName(buff){
+        const int8A = new Int8Array(buff.slice(0, 4));
+        nameLen =
+             int8A[0]        |
+            (int8A[1] << 8)  |
+            (int8A[1] << 16) |
+            (int8A[1] << 24);
+
+        const decoder = new TextDecoder();
+        return decoder.decode(buff.slice(offset, offset + nameLen));
+    }
+
+    function prepare(buff){
+        return buff.slice(offset+nameLen, buff.length);
+    }
+
     $.ajax({
         type: "POST",
         url: '/download',
         contentType: 'application/json',
         data: JSON.stringify(data),
-        success: function (result){
-            let bytes = b64DecodeUnicode(result.bytes);
-            let type = result.contentType;
-            let name = result.name;
-            let blob = new Blob([bytes], { type: type });
+        xhrFields:{
+            responseType: 'blob'
+        },
+        success: async function (result) {
+            const buff = await result.arrayBuffer();
+
+            let name = readName(buff);
+            let bytes = prepare(result);
+
+            let blob = new Blob([bytes], {type: "application/octet-stream"});
             let url = window.URL.createObjectURL(blob);
             let a = document.createElement("a");
+
             a.href = url;
             a.download = name;
             a.click();
             window.URL.revokeObjectURL(url);
+        },
+        error: function (e){
+            console.log("error");
+            console.log(e);
         }
     });
-    files.clear();
+    clearFilesMap();
 }

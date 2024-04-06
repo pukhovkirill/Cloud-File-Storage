@@ -18,18 +18,18 @@ public class BucketRenameFileCommand extends StorageCommand {
         if(entity.getContentType().equals("folder"))
             return;
 
-        String newFileName = (String)args[0];
+        String newFilePath = (String)args[1];
         try{
             var client = MinioUtility.getClient();
 
             client.copyObject(
                     CopyObjectArgs.builder()
                             .bucket(BUCKET_NAME)
-                            .object(entity.getPath())
+                            .object(newFilePath)
                             .source(
                                     CopySource.builder()
                                             .bucket(BUCKET_NAME)
-                                            .object(newFileName)
+                                            .object(entity.getPath())
                                             .build())
                             .build());
 

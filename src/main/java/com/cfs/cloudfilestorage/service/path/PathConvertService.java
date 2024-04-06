@@ -8,7 +8,13 @@ public interface PathConvertService {
 
     String createFileName(String fileName, String currentPath);
 
+    String renameFile(String oldName, String newName);
+
+    String renameFolder(String entityOldFolderName, String oldFolderName, String newFolderName);
+
     String getFileName(String path);
+
+    String getCleanName(String path);
 
     String getFullName(String path);
 

@@ -132,15 +132,6 @@
                             </div>
                         </li>
                         <li>
-                            <a href="#" class="nav-link link-body-emphasis">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi pe-none me-1" style="margin-top: -3px" viewBox="0 0 16 16">
-                                    <path d="M10 5h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-4v1h4a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-4zM6 5V4H2a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h4v-1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z"/>
-                                    <path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v13a.5.5 0 0 1-1 0v-13A.5.5 0 0 1 8 1"/>
-                                </svg>
-                                Rename
-                            </a>
-                        </li>
-                        <li>
                             <button class="nav-link link-body-emphasis" type="button" data-bs-toggle="modal" data-bs-target="#download-modal">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi pe-none me-1" viewBox="0 0 16 16">
                                     <path d="M4.406 1.342A5.53 5.53 0 0 1 8 0c2.69 0 4.923 2 5.166 4.579C14.758 4.804 16 6.137 16 7.773 16 9.569 14.502 11 12.687 11H10a.5.5 0 0 1 0-1h2.688C13.979 10 15 8.988 15 7.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 2.825 10.328 1 8 1a4.53 4.53 0 0 0-2.941 1.1c-.757.652-1.153 1.438-1.153 2.055v.448l-.445.049C2.064 4.805 1 5.952 1 7.318 1 8.785 2.23 10 3.781 10H6a.5.5 0 0 1 0 1H3.781C1.708 11 0 9.366 0 7.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383"/>
@@ -150,20 +141,28 @@
                             </button>
                         </li>
                         <li>
-                            <a href="#" class="nav-link link-body-emphasis">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi pe-none me-1" style="margin-top: -5px" viewBox="0 0 16 16">
-                                    <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+                            <a href="#" th:href="@{/available}" class="nav-link link-body-emphasis">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people me-1" style="margin-top: -3px" viewBox="0 0 16 16">
+                                    <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002-.014.002zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a6 6 0 0 0-1.23-.247A7 7 0 0 0 5 9c-4 0-5 3-5 4q0 1 1 1h4.216A2.24 2.24 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.5 5.5 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/>
                                 </svg>
-                                Remove
+                                Available to me
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="nav-link link-body-emphasis">
+                            <a href="#" th:href="@{/trash}" class="nav-link link-body-emphasis">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi pe-none me-1" style="margin-top: -5px" viewBox="0 0 16 16">
+                                    <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+                                </svg>
+                                Trash
+                            </a>
+                        </li>
+                        <li>
+                            <button class="nav-link link-body-emphasis" type="button" data-bs-toggle="modal" data-bs-target="#share-modal">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi pe-none me-1" style="margin-top: -5px" viewBox="0 0 16 16">
                                     <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.5 2.5 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5m-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3m11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3"/>
                                 </svg>
-                                Share file
-                            </a>
+                                Share
+                            </button>
                         </li>
                         <li>
                             <a href="#" class="nav-link link-body-emphasis">
@@ -214,6 +213,7 @@
                         <table class="table table-light">
                             <thead>
                                 <tr>
+                                    <th scope="col"></th>
                                     <th scope="col">Name</th>
                                     <th scope="col">Owner</th>
                                     <th scope="col">Last modified</th>
@@ -222,10 +222,27 @@
                                 </tr>
                             </thead>
                             <tbody th:hidden="${content.isEmpty()}" class="prevent-select">
-                            <tr th:each="entity : ${content}">
-                                <td>
-                                    <a class="nav-link" th:if="${entity.contentType.equals('folder')}" th:href="@{/folders/{path}(path=${entity.pathToBase64()})}" th:text="${entity.name}"></a>
-                                    <div th:unless="${entity.contentType.equals('folder')}" th:text="${entity.name}">file</div>
+                            <tr th:each="entity, iter : ${content}">
+                                <td th:if="${entity.contentType.equals('folder')}" style="width: 16px">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#22A699" class="bi bi-folder-fill" viewBox="0 0 16 16">
+                                        <path d="M9.828 3h3.982a2 2 0 0 1 1.992 2.181l-.637 7A2 2 0 0 1 13.174 14H2.825a2 2 0 0 1-1.991-1.819l-.637-7a2 2 0 0 1 .342-1.31L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3m-8.322.12q.322-.119.684-.12h5.396l-.707-.707A1 1 0 0 0 6.172 2H2.5a1 1 0 0 0-1 .981z"/>
+                                    </svg>
+                                </td>
+                                <td th:unless="${entity.contentType.equals('folder')}" style="width: 16px">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#22A699" class="bi bi-file-earmark-text-fill" style="margin-bottom: 4px" viewBox="0 0 16 16">
+                                        <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M4.5 9a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1zM4 10.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 1 0-1h4a.5.5 0 0 1 0 1z"/>
+                                    </svg>
+                                </td>
+                                <td th:id="${'name-cell'+iter.index}" ondblclick="rename(this)">
+                                    <form th:action="@{/rename}" method="post">
+                                        <input type="hidden" name="working_directory" th:value="${workingDirectory}">
+                                        <input type="hidden" name="entity_path" th:value="${entity.path}"/>
+                                        <div id="cell-content">
+                                            <a class="nav-link" th:if="${entity.contentType.equals('folder')}" th:href="@{/folders/{path}(path=${entity.pathToBase64()})}" th:text="${entity.name}"></a>
+                                            <div th:unless="${entity.contentType.equals('folder')}" th:text="${entity.name}">file</div>
+                                        </div>
+                                        <input class="d-none" name="entity_name" id="file-name-input" th:value="${entity.name}"/>
+                                    </form>
                                 </td>
                                 <td>
                                     <a class="nav-link" th:if="${entity.contentType.equals('folder')}"  th:href="@{/folders/{path}(path=${entity.pathToBase64()})}" th:text="${entity.owner.equals(person.email) ? 'me' : entity.owner}"></a>
@@ -249,7 +266,22 @@
                     </div>
                 </div>
             </main>
+            <script>
+                function rename(e){
+                    const input = document.getElementById('file-name-input');
+                    const cellContent = document.getElementById('cell-content');
+                    let isHidden = input.classList.contains('d-none');
 
+                    if(isHidden){
+                        input.value = cellContent.innerText;
+                        input.classList.remove('d-none');
+                        cellContent.classList.add('d-none');
+                    }else{
+                        input.classList.add('d-none');
+                        cellContent.classList.remove('d-none');
+                    }
+                }
+            </script>
         </div>
     </div>
 
@@ -270,7 +302,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn text-white" style="background-color: #22A699" data-bs-dismiss="modal" onclick="document.getElementById('create-folder-form').submit()">Upload</button>
+                <button type="button" class="btn text-white" style="background-color: #22A699" data-bs-dismiss="modal" onclick="document.getElementById('create-folder-form').submit()">Create</button>
             </div>
         </div>
     </div>
@@ -303,8 +335,8 @@
                                         </p>
                                     </div>
                                 </div>
-                                <input type="hidden" name="current_path" th:value="${workingDirectory}">
-                                <input type="file" name="file" id="file-input" multiple class="d-none"/>
+                                <input type="hidden" name="current_path" th:value="${workingDirectory}"/>
+                                <input type="file" name="file" id="file-input" multiple class="d-none" required />
                                 <div id="gallery"></div>
                             </div>
                         </div>
@@ -313,7 +345,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" id="clear-file-input">Clear</button>
-                <button type="button" class="btn text-white" style="background-color: #22A699" data-bs-dismiss="modal" aria-label="Close" onclick="document.getElementById('file-form').submit()">Upload</button>
+                <button type="submit" class="btn text-white" style="background-color: #22A699" data-bs-dismiss="modal" aria-label="Close" onclick="formFileSubmit()">Upload</button>
             </div>
         </div>
     </div>
@@ -385,6 +417,13 @@
             gallery.appendChild(div);
         }
     }
+
+    function formFileSubmit(){
+        let fileInput = document.getElementById('file-input');
+        let size = fileInput.files.length;
+        if(size > 0)
+            document.getElementById('file-form').submit();
+    }
 </script>
 <!-- files upload -->
 
@@ -400,12 +439,12 @@
             <div class="modal-body">
                 <form th:action="@{/upload-folder}" enctype="multipart/form-data" method="post" id="folder-form">
                     <input type="hidden" name="current_path" th:value="${workingDirectory}">
-                    <input type="file" name="folder" id="folder-input" class="form-control" webkitdirectory mozdirectory msdirectory odirectory directory multiple/>
+                    <input type="file" name="folder" id="folder-input" class="form-control" webkitdirectory mozdirectory msdirectory odirectory directory multiple required />
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" id="clear-folder-input">Clear</button>
-                <button type="button" class="btn text-white" style="background-color: #22A699" data-bs-dismiss="modal" onclick="document.getElementById('folder-form').submit()">Upload</button>
+                <button type="submit" class="btn text-white" style="background-color: #22A699" data-bs-dismiss="modal" onclick="formFolderSubmit()">Upload</button>
             </div>
         </div>
     </div>
@@ -416,6 +455,13 @@
     clearFolder.addEventListener('click', () => {
         folderElem.value = null;
     })
+
+    function formFolderSubmit(){
+        let folderInput = document.getElementById('folder-input');
+        let size = folderInput.files.length;
+        if(size > 0)
+            document.getElementById('folder-form').submit();
+    }
 </script>
 <!-- folder upload -->
 
@@ -428,45 +474,105 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body modal-dialog-scrollable" style="min-height: 70vh;">
-                <table class="table">
+                <div class="btn-group">
+                    <button class="btn btn-outline-secondary active" onclick="openTable(this, 'Files')" id="files-tab-button">Files</button>
+                    <button class="btn btn-outline-secondary" onclick="openTable(this, 'Folders')" id="folders-tab-button">Folders</button>
+                </div>
+                <table class="table table-hover">
                     <thead>
                     <tr>
+                        <th scope="col"></th>
                         <th scope="col">Name</th>
-                        <th scope="col">Owner</th>
-                        <th scope="col">Last modified</th>
+                        <th scope="col">Path</th>
                         <th scope="col">File size</th>
-                        <th scope="col">Location</th>
                     </tr>
                     </thead>
-                    <tbody th:hidden="${content.isEmpty()}" class="prevent-select">
-                    <tr th:each="entity, iter : ${content}" th:id="${iter.index}" onclick="addToChosen(this)">
-                        <td>
-                            <div class="d-none" th:text="${entity.path}" th:id="${'path-'+iter.index}"></div>
-                            <div th:text="${entity.name}"></div>
-                        </td>
-                        <td>
-                            <div th:text="${entity.owner.equals(person.email) ? 'me' : entity.owner}">me</div>
-                        </td>
-                        <td>
-                            <div th:text="${#dates.format(entity.lastModified, 'HH:mm')}">15:21</div>
-                        </td>
-                        <td>
-                            <div th:text="${entity.size} + ' byte'">3 kb</div>
-                        </td>
-                        <td>
-                            <div th:text="${entity.owner.equals(person.email) ? 'my vault' : 'available to me'}">my vault</div>
-                        </td>
-                    </tr>
+                    <tbody class="prevent-select" id="Files">
+                        <tr th:each="entity, iter : ${allFiles}" th:id="${'file-'+iter.index}" onclick="addToChosen(this)" style="cursor: pointer;">
+                            <td style="width: 16px">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#22A699" class="bi bi-file-earmark-text-fill" style="margin-bottom: 4px" viewBox="0 0 16 16">
+                                    <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M4.5 9a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1zM4 10.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 1 0-1h4a.5.5 0 0 1 0 1z"/>
+                                </svg>
+                            </td>
+                            <td>
+                                <div th:text="${entity.name}">file</div>
+                            </td>
+                            <td>
+                                <div th:text="${entity.path}" th:id="${'path-file-'+iter.index}">root/folder1/folder</div>
+                            </td>
+                            <td>
+                                <div th:text="${entity.size} + ' byte'">3 kb</div>
+                            </td>
+                        </tr>
+                    </tbody>
+
+                    <tbody class="prevent-select" id="Folders" hidden="true">
+                        <tr th:each="entity, iter : ${allFolders}" th:id="${'folder-'+iter.index}" onclick="addToChosen(this)" style="cursor: pointer;">
+                            <td style="width: 16px">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#22A699" class="bi bi-folder-fill" viewBox="0 0 16 16">
+                                    <path d="M9.828 3h3.982a2 2 0 0 1 1.992 2.181l-.637 7A2 2 0 0 1 13.174 14H2.825a2 2 0 0 1-1.991-1.819l-.637-7a2 2 0 0 1 .342-1.31L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3m-8.322.12q.322-.119.684-.12h5.396l-.707-.707A1 1 0 0 0 6.172 2H2.5a1 1 0 0 0-1 .981z"/>
+                                </svg>
+                            </td>
+                            <td>
+                                <div th:text="${entity.name}">file</div>
+                            </td>
+                            <td>
+                                <div th:text="${entity.path}" th:id="${'path-folder-'+iter.index}">root/folder1/folder</div>
+                            </td>
+                            <td>
+                                <div>folder</div>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
             <div class="modal-footer">
-                <input type="submit" class="btn text-white" style="background-color: #22A699" value="Download" data-bs-dismiss="modal" onclick="download()">
+                <input type="submit" class="btn text-white" style="background-color: #22A699" data-bs-dismiss="modal" onclick="download()" value="Download">
             </div>
         </div>
     </div>
 </div>
+<script>
+    let tabs = new Map();
+    tabs.set("Files", "Folders");
+    tabs.set("Folders", "Files");
+    tabs.set("files-tab-button", "folders-tab-button");
+    tabs.set("folders-tab-button", "files-tab-button");
+
+    function openTable(evt, tableName) {
+        let tabcontent, notabcontent;
+
+        evt.classList.add('active');
+        document.getElementById(tabs.get(evt.id)).classList.remove('active');
+
+        tabcontent = document.getElementById(tableName);
+        notabcontent = document.getElementById(tabs.get(tableName));
+
+        tabcontent.hidden = false;
+        notabcontent.hidden = true;
+        clearFilesMap();
+    }
+</script>
 <!-- download -->
+
+<!-- share -->
+<div class="modal fade" tabindex="-1" id="share-modal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Share</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- share -->
 
 <!-- Modal windows -->
 </body>

@@ -3,6 +3,7 @@ package com.cfs.cloudfilestorage.service.path;
 import com.cfs.cloudfilestorage.aps.APS;
 import com.cfs.cloudfilestorage.aps.AbstractPathTree;
 import com.cfs.cloudfilestorage.aps.PathView;
+import com.cfs.cloudfilestorage.aps.TokenType;
 import com.cfs.cloudfilestorage.dto.StorageEntity;
 import com.cfs.cloudfilestorage.model.StorageItem;
 import com.cfs.cloudfilestorage.service.person.AuthorizedPersonService;
@@ -73,6 +74,33 @@ public class PathManageServiceImpl implements PathManageService, PathConvertServ
         return resultFolderPath;
     }
 
+    @Override
+    public String renameFile(String oldName, String newName) {
+        var parent = getParent(oldName);
+        return parent+newName;
+    }
+
+    @Override
+    public String renameFolder(String entityOldFolderName, String oldFolderName, String newFolderName) {
+        if(isFolder(entityOldFolderName)){
+            var parent = getParent(oldFolderName);
+            newFolderName = parent+newFolderName;
+
+            if(!newFolderName.endsWith("/"))
+                newFolderName = newFolderName+"/";
+
+            return entityOldFolderName.replace(oldFolderName, newFolderName);
+        }else{
+            var parent = getParent(getParent(oldFolderName));
+            newFolderName = parent+newFolderName;
+
+            if(!newFolderName.endsWith("/"))
+                newFolderName = newFolderName+"/";
+
+            return entityOldFolderName.replace(oldFolderName, newFolderName);
+        }
+    }
+
     private String makeFilePath(String workingDirectory, String fileName){
         String[] folders = workingDirectory.split("/");
 
@@ -100,7 +128,8 @@ public class PathManageServiceImpl implements PathManageService, PathConvertServ
         }
     }
 
-    private String getCleanName(String path){
+    @Override
+    public String getCleanName(String path){
         try{
             var oPath = Paths.get(path);
             return oPath.getFileName().toString();
@@ -151,7 +180,7 @@ public class PathManageServiceImpl implements PathManageService, PathConvertServ
     private String removeLastSlash(String path){
         var parent = getParent(path);
         var name = getCleanName(path);
-        return parent+"/"+name;
+        return parent+name;
     }
 
     private String getPersonRootFolder(){
@@ -186,8 +215,29 @@ public class PathManageServiceImpl implements PathManageService, PathConvertServ
     }
 
     @Override
-    public List<StorageEntity> previousDirectory(String path) {
-        return null;
+    public List<StorageEntity> getAllFiles() {
+        return getAll(TokenType.FILE);
+    }
+
+    @Override
+    public List<StorageEntity> getAllDirectory() {
+       return getAll(TokenType.FOLDER);
+    }
+
+    private List<StorageEntity> getAll(TokenType type){
+        List<StorageEntity> entities = new ArrayList<>();
+        var iterator = this.tree.getTreeIterator();
+
+        while (iterator.hasNext()) {
+            var entity = iterator.next();
+            if(entity.getType() == type){
+                if(entity.getEntity() == null)
+                    continue;
+                entities.add(entity.getEntity());
+            }
+        }
+
+        return entities;
     }
 
     @Override

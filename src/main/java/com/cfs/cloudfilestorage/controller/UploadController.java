@@ -30,21 +30,30 @@ public class UploadController extends StorageBaseController{
     }
 
     @PostMapping("/upload-folder")
-    public String uploadFolder(@RequestParam("folder") MultipartFile[] folder, @RequestParam("current_path") String currentPath) {
-        return "redirect:/";
+    public String uploadFolder(@RequestParam("folder") MultipartFile[] folder, @RequestParam("current_path") String currentPath) throws IOException {
+        itemManageService.uploadMultiple(buildFolderDtoArray(folder, currentPath));
+        return String.format("redirect:%s", currentPath);
     }
 
-    // todo: refactor this method
-    private StorageEntity buildFolder(MultipartFile[] folder) {
-        var folderName = pathConvertService.getFileName(folder[0].getOriginalFilename());
-        var folderPath = pathConvertService.getFullName(folder[0].getOriginalFilename());
-        return StorageEntity.builder()
+    private StorageEntity[] buildFolderDtoArray(MultipartFile[] folder, String currentPath) throws IOException {
+        var person = findPerson();
+        var name = folder[0].getOriginalFilename();
+        var folderName = pathConvertService.getParent(name);
+        var folderPath = pathConvertService.createFileName(folderName, currentPath);
+
+        folderName = pathConvertService.getCleanName(folderName);
+        var eFolder = StorageEntity.builder()
                 .id(null)
                 .name(folderName)
                 .path(folderPath)
                 .contentType("folder")
                 .lastModified(new Timestamp(System.currentTimeMillis()))
+                .bytes(new byte[0])
+                .owner(person.getEmail())
                 .build();
+
+        itemManageService.upload(eFolder);
+        return buildFileDtoArray(folder, folderPath);
     }
 
     private StorageEntity[] buildFileDtoArray(MultipartFile[] files, String currentPath) throws IOException {
@@ -60,7 +69,7 @@ public class UploadController extends StorageBaseController{
 
     private StorageEntity buildFileDto(MultipartFile file, String currentPath) throws IOException {
         var fileName = pathConvertService.getFileName(file.getOriginalFilename());
-        var filePath = pathConvertService.createFileName(fileName, currentPath);
+        var filePath = currentPath+fileName;
         return StorageEntity.builder()
                 .id(null)
                 .name(fileName)

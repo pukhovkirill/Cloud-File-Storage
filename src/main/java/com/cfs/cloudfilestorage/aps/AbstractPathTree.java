@@ -71,6 +71,10 @@ public class AbstractPathTree implements APS{
         return this.root.getChildren();
     }
 
+    public Iterator<PathNode> getTreeIterator(){
+        return new BFSIterator(this.root);
+    }
+
     @Override
     public boolean pathExists(String path) {
         return find(path) != null;

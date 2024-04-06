@@ -30,9 +30,10 @@ public class ItemManageServiceImpl implements ItemManageService {
     }
 
     @Override
-    public StorageEntity rename(StorageEntity item, String newName) {
-        storageSwitch.execute("rename", item, newName);
+    public StorageEntity rename(StorageEntity item, String newName, String path) {
+        storageSwitch.execute("rename", item, newName, path);
         item.setName(newName);
+        item.setPath(path);
         return item;
     }
 

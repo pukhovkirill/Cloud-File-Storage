@@ -11,9 +11,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.io.*;
+import java.sql.Timestamp;
+import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @RestController
 public class RestDownloadController extends StorageBaseController{
@@ -23,28 +25,73 @@ public class RestDownloadController extends StorageBaseController{
     }
 
     @RequestMapping(value = "/download", method = RequestMethod.POST)
-    public @ResponseBody StorageResponse downloadFiles(@RequestBody List<String> request){
-        if(request.size() == 1){
+    public @ResponseBody byte[] downloadFiles(@RequestBody List<String> request) throws IOException {
+        if(request.size() == 1 && !pathConvertService.isFolder(request.getFirst())){
             var file = findFile(request.getFirst(), findPerson());
             itemManageService.download(file);
             return fileResponse(file);
         }
 
-        return null;
-        //return archiveResponse(findStorageEntities(request));
+
+        var items = findStorageEntities(request);
+        for(var item : items){
+            itemManageService.download(item);
+        }
+
+        return archiveResponse(items);
     }
 
-    private StorageResponse archiveResponse(StorageEntity[] entities){
-        return null;
+    private byte[] archiveResponse(StorageEntity[] entities) throws IOException {
+        var archiveName = ("archive-"+(new Timestamp(System.currentTimeMillis()))+".zip").getBytes();
+        var nameLength = nameLengthEncode(archiveName.length);
+
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        baos.write(nameLength);
+        baos.write(archiveName);
+
+        final ZipOutputStream zos = new ZipOutputStream(baos);
+
+        for(var file : entities){
+            var fileName = subtractionRoot(file.getPath());
+            ZipEntry entry = new ZipEntry(fileName);
+            entry.setSize(file.getSize());
+            zos.putNextEntry(entry);
+            zos.write(file.getBytes());
+            zos.closeEntry();
+        }
+
+        zos.close();
+        baos.close();
+        return baos.toByteArray();
     }
 
-    private StorageResponse fileResponse(StorageEntity file){
-        return StorageResponse.builder()
-                .name(file.getName())
-                .contentType(file.getContentType())
-                .bytes(file.getBytes())
-                .build();
+    private String subtractionRoot(String name){
+        var root = "user-"+findPerson().getId()+"-files/";
+        return name.replace(root, "");
+    }
 
+    private byte[] fileResponse(StorageEntity file) throws IOException {
+        var fileName = file.getName().getBytes();
+        var nameLength = nameLengthEncode(fileName.length);
+
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        baos.write(nameLength);
+        baos.write(fileName);
+        baos.write(file.getBytes());
+
+        baos.close();
+
+        return baos.toByteArray();
+    }
+
+    private byte[] nameLengthEncode(int length){
+        byte[] lengthBytes = new byte[4];
+        lengthBytes[0] = (byte)(char)( length        & 255);
+        lengthBytes[1] = (byte)(char)((length >>  8) & 255);
+        lengthBytes[2] = (byte)(char)((length >> 16) & 255);
+        lengthBytes[3] = (byte)(char)((length >> 24) & 255);
+
+        return lengthBytes;
     }
 
     private StorageEntity[] findStorageEntities(List<String> entities){
@@ -71,6 +118,7 @@ public class RestDownloadController extends StorageBaseController{
 
         var list = person.getAvailableItems().stream()
                 .filter(x -> x.getPath().startsWith(folderPath))
+                .filter(x -> !x.getContentType().equals("folder"))
                 .toList();
 
         for(var item : list){

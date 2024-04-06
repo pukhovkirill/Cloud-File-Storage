@@ -3,14 +3,17 @@ package com.cfs.cloudfilestorage.service.storage.Impl.command;
 import com.cfs.cloudfilestorage.dto.StorageEntity;
 import com.cfs.cloudfilestorage.service.storage.StorageCommand;
 import com.cfs.cloudfilestorage.util.MinioUtility;
-import io.minio.RemoveObjectArgs;
+import io.minio.GetObjectArgs;
 import io.minio.errors.MinioException;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
-public class BucketRemoveFileCommand extends StorageCommand {
+public class BucketDownloadCommand extends StorageCommand {
+
     @Override
     protected void action(StorageEntity entity, Object ... args) {
 
@@ -20,11 +23,25 @@ public class BucketRemoveFileCommand extends StorageCommand {
         try{
             var client = MinioUtility.getClient();
 
-            client.removeObject(
-                    RemoveObjectArgs.builder()
+            var out = new ByteArrayOutputStream();
+
+            InputStream in = client.getObject(
+                    GetObjectArgs.builder()
                             .bucket(BUCKET_NAME)
                             .object(entity.getPath())
                             .build());
+
+            byte[] buff = new byte[1024];
+
+            int count;
+            while ((count = in.read(buff)) >= 0){
+                out.write(buff, 0, count);
+            }
+
+            entity.setBytes(out.toByteArray());
+
+            out.close();
+            in.close();
 
             MinioUtility.releaseClient(client);
 
