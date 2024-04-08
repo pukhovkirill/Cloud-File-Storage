@@ -40,7 +40,7 @@ public class PathManageServiceImpl implements PathManageService, PathConvertServ
             folderName = folderName+"/";
             resultFolderPath = getFullName(folderName);
         }else{
-            workingDir = new String(Base64.getDecoder().decode(workingDir.getBytes()));
+            workingDir = new String(Base64.getMimeDecoder().decode(workingDir.getBytes()));
             resultFolderPath = makeFolderPath(workingDir, folderName);
         }
 
@@ -67,7 +67,7 @@ public class PathManageServiceImpl implements PathManageService, PathConvertServ
         if(workingDir.equals("vault")){
             resultFolderPath = getFullName(fileName);
         }else{
-            workingDir = new String(Base64.getDecoder().decode(workingDir.getBytes()));
+            workingDir = new String(Base64.getMimeDecoder().decode(workingDir.getBytes()));
             resultFolderPath = makeFilePath(workingDir, fileName);
         }
 

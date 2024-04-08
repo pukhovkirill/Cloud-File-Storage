@@ -52,6 +52,6 @@ public class StorageEntity {
     }
 
     public String pathToBase64(){
-        return Base64.getEncoder().encodeToString(this.path.getBytes());
+        return Base64.getMimeEncoder().encodeToString(this.path.getBytes());
     }
 }

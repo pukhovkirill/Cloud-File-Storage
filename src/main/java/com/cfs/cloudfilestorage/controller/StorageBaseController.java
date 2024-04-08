@@ -73,8 +73,8 @@ public class StorageBaseController {
         var percentUsage = computeTotalSizePercent(size, 15L * 1024 * 1024 * 1024);
 
         return StorageUsage.builder()
-                .percent(String.format("%.2f", sizeInGigabytes))
-                .totalSize(String.format("%.2f", percentUsage))
+                .percent(String.format("%.2f", percentUsage))
+                .totalSize(String.format("%.2f", sizeInGigabytes))
                 .build();
     }
 

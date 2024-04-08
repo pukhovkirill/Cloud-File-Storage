@@ -13,6 +13,6 @@ public class PathView {
     private String fullPath;
 
     public String pathToBase64(){
-        return Base64.getEncoder().encodeToString(this.fullPath.getBytes());
+        return Base64.getMimeEncoder().encodeToString(this.fullPath.getBytes());
     }
 }

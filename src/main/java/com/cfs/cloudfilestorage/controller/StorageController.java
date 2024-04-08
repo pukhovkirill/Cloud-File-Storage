@@ -57,7 +57,7 @@ public class StorageController extends StorageBaseController {
 
         var person = findPerson();
 
-        var decodePath = new String(Base64.getDecoder().decode(path.getBytes()));
+        var decodePath = new String(Base64.getMimeDecoder().decode(path.getBytes()));
         pathManageService.buildStoragePath(person.getAvailableItems());
         var content = pathManageService.changeDirectory(decodePath);
         var allFiles = pathManageService.getAllFiles();
@@ -81,13 +81,13 @@ public class StorageController extends StorageBaseController {
     public String showPreviousFolder(@PathVariable String path, @RequestParam("index") Integer index){
 
         var previous = getPreviousPath(path, index);
-        previous = Base64.getEncoder().encodeToString(previous.getBytes());
+        previous = Base64.getMimeEncoder().encodeToString(previous.getBytes());
 
         return String.format("redirect:/folders/%s", previous);
     }
 
     private String getPreviousPath(String path, int index){
-        var decodePath = new String(Base64.getDecoder().decode(path.getBytes()));
+        var decodePath = new String(Base64.getMimeDecoder().decode(path.getBytes()));
 
         var pathView = pathConvertService.getPathView(decodePath);
         StringBuilder newPath = new StringBuilder();

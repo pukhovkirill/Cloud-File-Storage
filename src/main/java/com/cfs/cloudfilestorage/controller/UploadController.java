@@ -58,7 +58,7 @@ public class UploadController extends StorageBaseController{
     }
 
     private StorageEntity[] buildFolderFileDtoArray(MultipartFile[] folder, String currentPath) throws IOException {
-        var cPath = Base64.getEncoder().encodeToString(currentPath.getBytes());
+        var cPath = Base64.getMimeEncoder().encodeToString(currentPath.getBytes());
         return buildFileDtoArray(folder, cPath);
     }
 

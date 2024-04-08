@@ -82,6 +82,12 @@
             transform: translate3d(-21px, -7px, 0px) !important;
         }
 
+        .ellipsis {
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
     </style>
 </head>
 <body>
@@ -241,7 +247,7 @@
                                         <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M4.5 9a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1zM4 10.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 1 0-1h4a.5.5 0 0 1 0 1z"/>
                                     </svg>
                                 </td>
-                                <td th:id="${'name-cell-'+iter.index}" ondblclick="rename(this)">
+                                <td style="max-width: 150px;" class="ellipsis" th:id="${'name-cell-'+iter.index}" ondblclick="rename(this)">
                                     <form th:action="@{/rename}" method="post">
                                         <input type="hidden" name="working_directory" th:value="${workingDirectory}">
                                         <input type="hidden" name="entity_path" th:value="${entity.path}"/>
@@ -252,19 +258,19 @@
                                         <input class="d-none" name="entity_name" id="file-name-input" th:value="${entity.name}"/>
                                     </form>
                                 </td>
-                                <td>
+                                <td style="max-width: 150px;" class="ellipsis" >
                                     <a class="nav-link" th:if="${entity.contentType.equals('folder')}"  th:href="@{/folders/{path}(path=${entity.pathToBase64()})}" th:text="${entity.owner.equals(person.email) ? 'me' : entity.owner}"></a>
                                     <div th:unless="${entity.contentType.equals('folder')}" th:text="${entity.owner.equals(person.email) ? 'me' : entity.owner}">me</div>
                                 </td>
-                                <td>
+                                <td style="max-width: 150px;" class="ellipsis" >
                                     <a class="nav-link" th:if="${entity.contentType.equals('folder')}" th:href="@{/folders/{path}(path=${entity.pathToBase64()})}" th:text="${#dates.format(entity.lastModified, 'HH:mm')}"></a>
                                     <div th:unless="${entity.contentType.equals('folder')}" th:text="${#dates.format(entity.lastModified, 'HH:mm')}">15:21</div>
                                 </td>
-                                <td>
+                                <td style="max-width: 150px;" class="ellipsis" >
                                     <a class="nav-link" th:if="${entity.contentType.equals('folder')}" th:href="@{/folders/{path}(path=${entity.pathToBase64()})}" th:text="${entity.size} + ' byte'"></a>
                                     <div th:unless="${entity.contentType.equals('folder')}" th:text="${entity.size} + ' byte'">3 kb</div>
                                 </td>
-                                <td>
+                                <td style="max-width: 150px;" class="ellipsis" >
                                     <a class="nav-link" th:if="${entity.contentType.equals('folder')}" th:href="@{/folders/{path}(path=${entity.pathToBase64()})}" th:text="${entity.owner.equals(person.email) ? 'my vault' : 'available to me'}"></a>
                                     <div th:unless="${entity.contentType.equals('folder')}" th:text="${entity.owner.equals(person.email) ? 'my vault' : 'available to me'}">my vault</div>
                                 </td>
@@ -521,13 +527,13 @@
                                     <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M4.5 9a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1zM4 10.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 1 0-1h4a.5.5 0 0 1 0 1z"/>
                                 </svg>
                             </td>
-                            <td>
+                            <td style="max-width: 150px;" class="ellipsis" >
                                 <div th:text="${entity.name}">file</div>
                             </td>
-                            <td>
+                            <td style="max-width: 150px;" class="ellipsis">
                                 <div th:text="${entity.path}" th:id="${'path-file-'+iter.index}">root/folder1/folder</div>
                             </td>
-                            <td>
+                            <td style="max-width: 150px;" class="ellipsis">
                                 <div th:text="${entity.size} + ' byte'">3 kb</div>
                             </td>
                         </tr>
@@ -540,10 +546,10 @@
                                     <path d="M9.828 3h3.982a2 2 0 0 1 1.992 2.181l-.637 7A2 2 0 0 1 13.174 14H2.825a2 2 0 0 1-1.991-1.819l-.637-7a2 2 0 0 1 .342-1.31L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3m-8.322.12q.322-.119.684-.12h5.396l-.707-.707A1 1 0 0 0 6.172 2H2.5a1 1 0 0 0-1 .981z"/>
                                 </svg>
                             </td>
-                            <td>
+                            <td style="max-width: 150px;" class="ellipsis">
                                 <div th:text="${entity.name}">file</div>
                             </td>
-                            <td>
+                            <td style="max-width: 150px;" class="ellipsis" >
                                 <div th:text="${entity.path}" th:id="${'path-folder-'+iter.index}">root/folder1/folder</div>
                             </td>
                             <td>
