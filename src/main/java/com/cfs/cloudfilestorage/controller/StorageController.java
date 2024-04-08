@@ -35,13 +35,15 @@ public class StorageController extends StorageBaseController {
         var content = pathManageService.goToRoot();
         var allFiles = pathManageService.getAllFiles();
         var allFolders = pathManageService.getAllDirectory();
-
+        var totalSize = computeStorageUsage(person);
         setCurrentPath("", attributes);
+
 
         attributes.put("person", person);
         attributes.put("content", content);
         attributes.put("allFiles", allFiles);
         attributes.put("allFolders", allFolders);
+        attributes.put("storageUsage", totalSize);
         attributes.put("workingDirectory", "/vault");
         attributes.put("root", String.format("user-%d-files", person.getId()));
 
@@ -60,13 +62,14 @@ public class StorageController extends StorageBaseController {
         var content = pathManageService.changeDirectory(decodePath);
         var allFiles = pathManageService.getAllFiles();
         var allFolders = pathManageService.getAllDirectory();
-
+        var totalSize = computeStorageUsage(person);
         setCurrentPath(decodePath, attributes);
 
         attributes.put("person", person);
         attributes.put("content", content);
         attributes.put("allFiles", allFiles);
         attributes.put("allFolders", allFolders);
+        attributes.put("storageUsage", totalSize);
         attributes.put("workingDirectory", String.format("/folders/%s", path));
         attributes.put("root", String.format("user-%d-files", person.getId()));
 

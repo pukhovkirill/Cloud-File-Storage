@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.Base64;
 
 @Controller
 public class UploadController extends StorageBaseController{
@@ -53,7 +54,12 @@ public class UploadController extends StorageBaseController{
                 .build();
 
         itemManageService.upload(eFolder);
-        return buildFileDtoArray(folder, folderPath);
+        return buildFolderFileDtoArray(folder, folderPath);
+    }
+
+    private StorageEntity[] buildFolderFileDtoArray(MultipartFile[] folder, String currentPath) throws IOException {
+        var cPath = Base64.getEncoder().encodeToString(currentPath.getBytes());
+        return buildFileDtoArray(folder, cPath);
     }
 
     private StorageEntity[] buildFileDtoArray(MultipartFile[] files, String currentPath) throws IOException {
@@ -69,7 +75,7 @@ public class UploadController extends StorageBaseController{
 
     private StorageEntity buildFileDto(MultipartFile file, String currentPath) throws IOException {
         var fileName = pathConvertService.getFileName(file.getOriginalFilename());
-        var filePath = currentPath+fileName;
+        var filePath = pathConvertService.createFileName(fileName, currentPath);
         return StorageEntity.builder()
                 .id(null)
                 .name(fileName)
