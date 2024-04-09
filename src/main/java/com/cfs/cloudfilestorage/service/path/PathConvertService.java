@@ -20,6 +20,8 @@ public interface PathConvertService {
 
     String getParent(String path);
 
+    String subtraction(String minuend, String subtrahend);
+
     PathView getPathView(String path);
 
     boolean isFolder(String path);

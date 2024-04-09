@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Service
 public class PathManageServiceImpl implements PathManageService, PathConvertService{
@@ -67,11 +68,17 @@ public class PathManageServiceImpl implements PathManageService, PathConvertServ
         if(workingDir.equals("vault")){
             resultFolderPath = getFullName(fileName);
         }else{
-            workingDir = new String(Base64.getMimeDecoder().decode(workingDir.getBytes()));
+            if(isBase64(workingDir))
+                workingDir = new String(Base64.getMimeDecoder().decode(workingDir.getBytes()));
             resultFolderPath = makeFilePath(workingDir, fileName);
         }
 
         return resultFolderPath;
+    }
+
+    public boolean isBase64(String str) {
+        String pattern = "^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$";
+        return Pattern.matches(pattern, str);
     }
 
     @Override
@@ -156,6 +163,12 @@ public class PathManageServiceImpl implements PathManageService, PathConvertServ
         }catch (Exception e){
             return "";
         }
+    }
+
+    @Override
+    public String subtraction(String minuend, String subtrahend) {
+        var subtrahendIndex = minuend.indexOf(subtrahend);
+        return minuend.substring(subtrahendIndex+subtrahend.length());
     }
 
     @Override

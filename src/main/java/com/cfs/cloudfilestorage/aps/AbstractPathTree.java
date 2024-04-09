@@ -166,10 +166,6 @@ public class AbstractPathTree implements APS{
         }
     }
 
-    private boolean isExist(StorageEntity entity){
-        return find(entity) != null;
-    }
-
     private PathNode find(StorageEntity entity){
         var iterator = new BFSIterator(this.root);
 
