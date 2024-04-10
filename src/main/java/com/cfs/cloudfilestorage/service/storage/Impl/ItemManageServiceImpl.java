@@ -25,8 +25,23 @@ public class ItemManageServiceImpl implements ItemManageService {
     }
 
     @Override
-    public void uploadMultiple(StorageEntity[] StorageEntityArray) {
-        storageSwitch.execute("upload_multiple", null, (Object) StorageEntityArray);
+    public void uploadMultiple(StorageEntity[] storageEntityArray) {
+        storageSwitch.execute("upload_multiple", null, (Object) storageEntityArray);
+    }
+
+    @Override
+    public void moveToTrash(StorageEntity storageEntity) {
+        storageSwitch.execute("move_to_trash", storageEntity);
+    }
+
+    @Override
+    public void undoFromTrash(StorageEntity storageEntity) {
+        storageSwitch.execute("undo_from_trash", storageEntity);
+    }
+
+    @Override
+    public void removeFromTrash(StorageEntity item) {
+        storageSwitch.execute("remove_from_trash", item);
     }
 
     @Override
@@ -40,12 +55,6 @@ public class ItemManageServiceImpl implements ItemManageService {
     @Override
     public StorageEntity download(StorageEntity item) {
         storageSwitch.execute("download", item);
-        return item;
-    }
-
-    @Override
-    public StorageEntity remove(StorageEntity item) {
-        storageSwitch.execute("remove", item);
         return item;
     }
 

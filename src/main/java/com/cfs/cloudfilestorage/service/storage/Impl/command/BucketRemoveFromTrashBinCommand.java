@@ -10,15 +10,15 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
-public class BucketRemoveCommand extends StorageCommand {
+public class BucketRemoveFromTrashBinCommand extends StorageCommand {
     @Override
-    protected void action(StorageEntity entity, Object ... args) {
+    protected void action(StorageEntity entity, Object... args) {
         try{
             var client = MinioUtility.getClient();
 
             client.removeObject(
                     RemoveObjectArgs.builder()
-                            .bucket(BUCKET_NAME)
+                            .bucket(BUCKET_TRASH_NAME)
                             .object(entity.getPath())
                             .build());
 

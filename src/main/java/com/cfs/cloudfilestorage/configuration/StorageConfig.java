@@ -28,10 +28,20 @@ public class StorageConfig {
         StorageCommand downloadCommand = new BucketDownloadCommand();
         storageSwitch.register("download", downloadCommand);
 
-        StorageCommand removeCommand = new DBRemoveCommand(itemRepository);
-        removeCommand
+        StorageCommand moveToTrashCommand = new DBRemoveCommand(itemRepository, authorizedService);
+        moveToTrashCommand
+                .setNext(new BucketMoveToTrashBinCommand())
                 .setNext(new BucketRemoveCommand());
-        storageSwitch.register("remove", removeCommand);
+        storageSwitch.register("move_to_trash", moveToTrashCommand);
+
+        StorageCommand undoFromTrashCommand = new BucketUndoFromTrashBinCommand();
+        undoFromTrashCommand
+                .setNext(new BucketRemoveFromTrashBinCommand())
+                .setNext(new DBUploadCommand(personService, itemRepository, authorizedService));
+        storageSwitch.register("undo_from_trash", undoFromTrashCommand);
+
+        StorageCommand removeFromTrashCommand = new BucketRemoveFromTrashBinCommand();
+        storageSwitch.register("remove_from_trash", removeFromTrashCommand);
 
         StorageCommand renameCommand = new DBRenameCommand(itemRepository);
         renameCommand

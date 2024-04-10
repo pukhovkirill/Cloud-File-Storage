@@ -12,7 +12,5 @@ public interface StorageManageService{
 
     StorageEntity download(StorageEntity item);
 
-    StorageEntity remove(StorageEntity item);
-
     StorageEntity share(StorageEntity item, Long userId);
 }

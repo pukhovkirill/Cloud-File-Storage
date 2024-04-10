@@ -9,6 +9,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Base64;
 
@@ -16,7 +18,10 @@ import java.util.Base64;
 @Setter
 @Builder
 @AllArgsConstructor
-public class StorageEntity {
+public class StorageEntity implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     private Long id;
 

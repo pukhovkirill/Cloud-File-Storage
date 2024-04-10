@@ -5,9 +5,11 @@ import com.cfs.cloudfilestorage.util.PropertiesUtility;
 
 public abstract class StorageCommand{
     protected final static String BUCKET_NAME;
+    protected final static String BUCKET_TRASH_NAME;
 
     static{
         BUCKET_NAME = PropertiesUtility.getApplicationProperty("app.minio_bucket_name");
+        BUCKET_TRASH_NAME = PropertiesUtility.getApplicationProperty("app.minio_trash_bucket_name");
     }
 
     protected StorageCommand next;
