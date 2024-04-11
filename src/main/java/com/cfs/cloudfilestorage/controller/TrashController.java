@@ -26,15 +26,17 @@ public class TrashController extends StorageBaseController{
     public String showTrashBin(HttpSession session, Model model){
         var trashBin = findOrPersistTrashBin(session);
 
-        List<StorageEntity> bin = new ArrayList<>();
+        var bin = new ArrayList<StorageEntity>();
         for(int i = 0; i < trashBin.size(); i++){
             var trash = trashBin.get(i);
             if(trash.getContentType().equals("folder")){
                 var folderPath = trash.getPath();
                 var next = trashBin.stream()
-                        .takeWhile(x -> x.getPath().startsWith(folderPath))
+                        .filter(x -> x.getPath().startsWith(folderPath))
+                        .dropWhile(x -> x.getContentType().equals("folder"))
                         .count();
                 i += (int)next;
+                bin.add(trash);
                 continue;
             }
             bin.add(trash);
@@ -130,7 +132,7 @@ public class TrashController extends StorageBaseController{
         return new StorageEntity(storageItem.get());
     }
 
-    private void putToTrashBin(StorageEntity entity, HttpSession session) throws Exception {
+    private void putToTrashBin(StorageEntity entity, HttpSession session) {
         var trashBin = findOrPersistTrashBin(session);
 
         if(entity.getContentType().equals("folder"))
@@ -140,7 +142,7 @@ public class TrashController extends StorageBaseController{
         session.setAttribute("trashBin", trashBin);
     }
 
-    private void putFolderToTrashBin(StorageEntity item, List<StorageEntity> trashBin) throws Exception {
+    private void putFolderToTrashBin(StorageEntity item, List<StorageEntity> trashBin) {
         var person = findPerson();
         var path = item.getPath();
 
@@ -148,22 +150,10 @@ public class TrashController extends StorageBaseController{
                 .filter(x -> x.getPath().startsWith(path))
                 .map(StorageEntity::new).toList();
 
-        var optFolder = files.stream()
-                .takeWhile(x -> x.getContentType().equals("folder"))
-                .findFirst();
-
-        if(optFolder.isEmpty()){
-            throw new Exception("folder not found");
-        }
-
-        var folder = optFolder.get();
-
-        itemManageService.moveToTrash(item);
         for(var file : files){
             itemManageService.moveToTrash(file);
+            trashBin.add(file);
         }
-
-        trashBin.add(folder);
     }
 
     private void putFileToTrashBin(StorageEntity item, List<StorageEntity> trashBin){
@@ -188,7 +178,6 @@ public class TrashController extends StorageBaseController{
                 .filter(x -> x.getPath().startsWith(path))
                 .toList();
 
-        itemManageService.undoFromTrash(item);
         for(var file : files){
             itemManageService.undoFromTrash(file);
             trashBin.remove(file);
