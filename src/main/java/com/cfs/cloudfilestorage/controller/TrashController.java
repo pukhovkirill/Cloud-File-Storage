@@ -24,39 +24,39 @@ public class TrashController extends StorageBaseController{
 
     @GetMapping("/trash-bin")
     public String showTrashBin(HttpSession session, Model model){
-        var bin = findOrPersistTrashBin(session);
+        var trashBin = findOrPersistTrashBin(session);
+
+        List<StorageEntity> bin = new ArrayList<>();
+        for(int i = 0; i < trashBin.size(); i++){
+            var trash = trashBin.get(i);
+            if(trash.getContentType().equals("folder")){
+                var folderPath = trash.getPath();
+                var next = trashBin.stream()
+                        .takeWhile(x -> x.getPath().startsWith(folderPath))
+                        .count();
+                i += (int)next;
+                continue;
+            }
+            bin.add(trash);
+        }
+
         model.addAttribute("content", bin);
         return "trashbin";
     }
 
     @PostMapping("/move-to-trash")
-    public String moveToTrash(@RequestParam("item_id") Long id, @RequestParam("working_directory") String currentPath, HttpSession session){
-        var trashBin = findOrPersistTrashBin(session);
+    public String moveToTrashBin(@RequestParam("path") String path, @RequestParam("working_directory") String currentPath, HttpSession session) throws Exception {
+        var item = findStorageEntity(path);
+        putToTrashBin(item, session);
 
-        var item = findStorageEntityById(id);
-        trashBin.add(item);
-
-        itemManageService.moveToTrash(item);
-        session.setAttribute("trashBin", trashBin);
         return String.format("redirect:%s", currentPath);
     }
 
     @PostMapping("/undo-from-trash")
-    public String undoTrashBin(@RequestParam("item_id") Long id, HttpSession session) throws Exception {
+    public String undoFromTrashBin(@RequestParam("path") String path, HttpSession session) throws Exception {
         var bin = findTrashBin(session);
-        if(bin == null)
-            throw new Exception("Trash bin not found");
+        pullFromTrashBin(bin, path, session);
 
-        var optItem = bin.stream().filter(x -> x.getId().equals(id)).findFirst();
-
-        if(optItem.isEmpty())
-            throw new Exception("Object not found");
-
-        var item = optItem.get();
-        item.setBytes(new byte[0]);
-        itemManageService.undoFromTrash(item);
-        bin.remove(item);
-        session.setAttribute("trashBin", bin);
         return "redirect:/trash-bin";
     }
 
@@ -75,17 +75,9 @@ public class TrashController extends StorageBaseController{
     }
 
     @PostMapping("/remove")
-    public String removeFromTrashBin(@RequestParam("item_id") Long id, HttpSession session) throws Exception {
+    public String removeFromTrashBin(@RequestParam("path") String path, HttpSession session) throws Exception {
         var bin = findTrashBin(session);
-        if(bin == null)
-            throw new Exception("Trash bin not found");
-
-        var optItem = bin.stream().filter(x -> x.getId().equals(id)).findFirst();
-
-        if(optItem.isEmpty())
-            throw new Exception("Object not found");
-
-        var item = optItem.get();
+        var item = findStorageEntityInTrashBin(path, bin);
         itemManageService.removeFromTrash(item);
         session.setAttribute("trashBin", bin);
         return "redirect:/trash-bin";
@@ -112,13 +104,99 @@ public class TrashController extends StorageBaseController{
         return (ArrayList<StorageEntity>) bin;
     }
 
-    private StorageEntity findStorageEntityById(Long id){
+    private StorageEntity findStorageEntityInTrashBin(String path, List<StorageEntity> trashBin) throws Exception {
+        if(trashBin == null)
+            throw new Exception("Trash bin not found");
+
+        var optItem = trashBin.stream().filter(x -> x.getPath().equals(path)).findFirst();
+
+        if(optItem.isEmpty())
+            throw new Exception("Object not found");
+
+        return optItem.get();
+    }
+
+    private StorageEntity findStorageEntity(String path) throws Exception {
         var person = findPerson();
 
         var storageItem = person.getAvailableItems().stream()
-                .filter(x -> x.getId().equals(id))
+                .filter(x -> x.getPath().equals(path))
                 .findFirst();
 
-        return storageItem.map(StorageEntity::new).orElse(null);
+        if(storageItem.isEmpty()){
+            throw new Exception("Object not found");
+        }
+
+        return new StorageEntity(storageItem.get());
+    }
+
+    private void putToTrashBin(StorageEntity entity, HttpSession session) throws Exception {
+        var trashBin = findOrPersistTrashBin(session);
+
+        if(entity.getContentType().equals("folder"))
+            putFolderToTrashBin(entity, trashBin);
+        else putFileToTrashBin(entity, trashBin);
+
+        session.setAttribute("trashBin", trashBin);
+    }
+
+    private void putFolderToTrashBin(StorageEntity item, List<StorageEntity> trashBin) throws Exception {
+        var person = findPerson();
+        var path = item.getPath();
+
+        var files = person.getAvailableItems().stream()
+                .filter(x -> x.getPath().startsWith(path))
+                .map(StorageEntity::new).toList();
+
+        var optFolder = files.stream()
+                .takeWhile(x -> x.getContentType().equals("folder"))
+                .findFirst();
+
+        if(optFolder.isEmpty()){
+            throw new Exception("folder not found");
+        }
+
+        var folder = optFolder.get();
+
+        itemManageService.moveToTrash(item);
+        for(var file : files){
+            itemManageService.moveToTrash(file);
+        }
+
+        trashBin.add(folder);
+    }
+
+    private void putFileToTrashBin(StorageEntity item, List<StorageEntity> trashBin){
+        trashBin.add(item);
+        itemManageService.moveToTrash(item);
+    }
+
+    private void pullFromTrashBin(List<StorageEntity> trashBin, String path, HttpSession session) throws Exception {
+        var item = findStorageEntityInTrashBin(path, trashBin);
+
+        if(item.getContentType().equals("folder"))
+            pullFolderFromTrash(item, trashBin);
+        else pullFileFromTrashBin(item, trashBin);
+
+        session.setAttribute("trashBin", trashBin);
+    }
+
+    private void pullFolderFromTrash(StorageEntity item, List<StorageEntity> trashBin) {
+        var path = item.getPath();
+
+        var files = trashBin.stream()
+                .filter(x -> x.getPath().startsWith(path))
+                .toList();
+
+        itemManageService.undoFromTrash(item);
+        for(var file : files){
+            itemManageService.undoFromTrash(file);
+            trashBin.remove(file);
+        }
+    }
+
+    private void pullFileFromTrashBin(StorageEntity item, List<StorageEntity> trashBin) {
+        itemManageService.undoFromTrash(item);
+        trashBin.remove(item);
     }
 }

@@ -267,7 +267,7 @@
                                     <div th:unless="${entity.contentType.equals('folder')}" th:text="${#dates.format(entity.lastModified, 'HH:mm')}">15:21</div>
                                 </td>
                                 <td style="max-width: 150px;" class="ellipsis" >
-                                    <a class="nav-link" th:if="${entity.contentType.equals('folder')}" th:href="@{/folders/{path}(path=${entity.pathToBase64()})}" th:text="${entity.size} + ' byte'"></a>
+                                    <a class="nav-link" th:if="${entity.contentType.equals('folder')}" th:href="@{/folders/{path}(path=${entity.pathToBase64()})}" th:text="folder"></a>
                                     <div th:unless="${entity.contentType.equals('folder')}" th:text="${entity.size} + ' byte'">3 kb</div>
                                 </td>
                                 <td style="max-width: 150px;" class="ellipsis" >
@@ -283,9 +283,9 @@
                                                 </svg>
                                             </button>
                                             <div class="dropdown-menu remove-dropdown p-1">
-                                                <form th:action="@{/move-to-trash}" th:method="post">
+                                                <form th:action="@{/move-to-trash}" method="post">
                                                     <input type="hidden" name="working_directory" th:value="${workingDirectory}">
-                                                    <input name="item_id" th:value="${entity.id}" type="hidden">
+                                                    <input type="hidden" name="path" th:value="${entity.path}">
                                                     <button class="btn btn-sm btn-danger dropdown-item" type="submit">Move to trash</button>
                                                 </form>
                                             </div>
