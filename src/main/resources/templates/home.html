@@ -7,6 +7,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="/static/js/bootstrap.bundle.js" type="text/javascript" th:src="@{/js/bootstrap.bundle.js}"></script>
     <script src="/static/js/storage-download.js" type="text/javascript" th:src="@{/js/storage-download.js}"></script>
+    <script src="/static/js/share-item.js" type="text/javascript" th:src="@{/js/share-item.js}"></script>
     <style>
         .breadcrumb-chevron {
             --bs-breadcrumb-divider: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236c757d'%3E%3Cpath fill-rule='evenodd' d='M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
@@ -597,14 +598,62 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                    <label for="select-item">Choose object</label>
+                    <select class="form-select" id="select-item" required>
+                        <option selected>Open this select menu</option>
+                        <option th:each="entity, iter : ${content}" th:id="${'opt-'+entity.id}" th:value="${entity.path}" th:text="${entity.name+': '+entity.contentType}">text</option>
+                    </select>
 
+                    <label for="access-level" class="mt-4">General access</label>
+                    <select class="form-select" id="access-level">
+                        <option value="false" selected>Access denied</option>
+                        <option value="true">Access by link</option>
+                    </select>
             </div>
             <div class="modal-footer">
-
+                <button type="button" class="btn btn-secondary" onclick="copyLink()">Copy link</button>
+                <button type="button" class="btn text-white" style="background-color: #22A699" data-bs-dismiss="modal" onclick="ready()">Ready</button>
             </div>
         </div>
     </div>
 </div>
+<script>
+
+    function copyLink(){
+        sendShareRequest(
+            function(result){
+                navigator.clipboard.writeText(result).then(function() {
+                    console.log('Async: Copying to clipboard was successful!');
+                }, function(err) {
+                    console.error('Async: Could not copy text: ', err);
+                });
+            }
+        )
+    }
+
+    function ready(){
+        sendShareRequest(() => {})
+    }
+
+    function sendShareRequest(successFunc){
+        const data = {
+            path: document.getElementById('select-item').value,
+            access: document.getElementById('access-level').value
+        }
+
+        $.ajax({
+            type: "POST",
+            url: '/share-item',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            success: successFunc,
+            error: function (e){
+                console.log("error");
+                console.log(e);
+            }
+        });
+    }
+</script>
 <!-- share -->
 
 <!-- Modal windows -->
