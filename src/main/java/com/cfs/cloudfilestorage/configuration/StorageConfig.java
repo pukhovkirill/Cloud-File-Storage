@@ -55,8 +55,11 @@ public class StorageConfig {
         storageSwitch.register("share", shareCommand);
 
         StorageCommand removeShareCommand = new DBRemoveCommand(itemRepository, personRepository, authorizedService);
-        removeShareCommand.setNext(new BucketMoveToTrashBinCommand());
         storageSwitch.register("remove_share", removeShareCommand);
+
+        StorageCommand fullRemove = new DBRemoveCommand(itemRepository, personRepository, authorizedService);
+        fullRemove.setNext(new BucketRemoveCommand());
+        storageSwitch.register("full_remove", fullRemove);
 
         return storageSwitch;
     }

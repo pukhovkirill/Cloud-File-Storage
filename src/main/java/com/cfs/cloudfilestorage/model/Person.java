@@ -36,7 +36,7 @@ public class Person {
     @Column(nullable = false)
     private String password;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinTable(
             name = "item_to_person",
             joinColumns = { @JoinColumn(name = "person_id", referencedColumnName = "id", nullable = false) },

@@ -50,6 +50,13 @@ public class ItemManageServiceImpl implements ItemManageService {
     }
 
     @Override
+    public void fullRemove(StorageEntity[] items) {
+        for(var item : items){
+            storageSwitch.execute("full_remove", item);
+        }
+    }
+
+    @Override
     public StorageEntity rename(StorageEntity item, String newName, String path) {
         storageSwitch.execute("rename", item, newName, path);
         item.setName(newName);
