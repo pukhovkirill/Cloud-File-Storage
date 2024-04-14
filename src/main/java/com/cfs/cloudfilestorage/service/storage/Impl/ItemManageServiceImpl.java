@@ -45,6 +45,11 @@ public class ItemManageServiceImpl implements ItemManageService {
     }
 
     @Override
+    public void removeShare(StorageEntity item) {
+        storageSwitch.execute("remove_share", item);
+    }
+
+    @Override
     public StorageEntity rename(StorageEntity item, String newName, String path) {
         storageSwitch.execute("rename", item, newName, path);
         item.setName(newName);

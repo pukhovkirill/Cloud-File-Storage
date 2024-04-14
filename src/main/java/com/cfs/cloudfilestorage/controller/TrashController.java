@@ -85,6 +85,13 @@ public class TrashController extends StorageBaseController{
         return "redirect:/trash-bin";
     }
 
+    @PostMapping("/remove-shared")
+    public String removeSharedFromTrashBin(@RequestParam("path") String path, @RequestParam("working_directory") String currentPath) throws Exception {
+        var item = findStorageEntity(path);
+        itemManageService.removeShare(item);
+        return "redirect:/vault";
+    }
+
     private List<StorageEntity> findOrPersistTrashBin(HttpSession session){
         try{
             List<StorageEntity> trashBin = findTrashBin(session);

@@ -2,6 +2,8 @@ package com.cfs.cloudfilestorage.controller;
 
 import com.cfs.cloudfilestorage.dto.StorageEntity;
 import com.cfs.cloudfilestorage.model.Person;
+import com.cfs.cloudfilestorage.model.StorageItem;
+import com.cfs.cloudfilestorage.repository.SharedItemRepository;
 import com.cfs.cloudfilestorage.service.path.PathConvertService;
 import com.cfs.cloudfilestorage.service.path.PathManageService;
 import com.cfs.cloudfilestorage.service.person.AuthorizedPersonService;
@@ -20,8 +22,15 @@ import java.util.zip.ZipOutputStream;
 @RestController
 public class RestDownloadController extends StorageBaseController{
 
-    public RestDownloadController(PathManageService pathManageService, ItemManageService itemManageService, PathConvertService pathConvertService, AuthorizedPersonService authorizedPersonService) {
+    private final SharedItemRepository sharedItemRepository;
+
+    public RestDownloadController(PathManageService pathManageService,
+                                  ItemManageService itemManageService,
+                                  PathConvertService pathConvertService,
+                                  SharedItemRepository sharedItemRepository,
+                                  AuthorizedPersonService authorizedPersonService) {
         super(pathManageService, itemManageService, pathConvertService, authorizedPersonService);
+        this.sharedItemRepository = sharedItemRepository;
     }
 
     @RequestMapping(value = "/download", method = RequestMethod.POST)
@@ -31,7 +40,6 @@ public class RestDownloadController extends StorageBaseController{
             itemManageService.download(file);
             return fileResponse(file);
         }
-
 
         var items = findStorageEntities(request);
         for(var item : items){
@@ -130,9 +138,19 @@ public class RestDownloadController extends StorageBaseController{
 
     private StorageEntity findFile(String filePath, Person person){
         var item = person.getAvailableItems().stream()
-                .filter(x -> x.getPath().equals(filePath)).findFirst();
+                .filter(x -> x.getPath().equals(filePath)).filter(this::checkAvailability).findFirst();
 
         return item.map(StorageEntity::new).orElse(null);
+    }
+
+    private Boolean checkAvailability(StorageItem item){
+        var sharedAccess = sharedItemRepository.findByItem(item);
+
+        if(sharedAccess == null){
+            return true;
+        }
+
+        return sharedAccess.getIsShared();
     }
 
     @Getter

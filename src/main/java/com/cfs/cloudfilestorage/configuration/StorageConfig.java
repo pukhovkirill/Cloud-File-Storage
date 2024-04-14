@@ -1,6 +1,7 @@
 package com.cfs.cloudfilestorage.configuration;
 
 import com.cfs.cloudfilestorage.repository.ItemRepository;
+import com.cfs.cloudfilestorage.repository.PersonRepository;
 import com.cfs.cloudfilestorage.service.person.AuthorizedPersonService;
 import com.cfs.cloudfilestorage.service.person.PersonService;
 import com.cfs.cloudfilestorage.service.storage.Impl.StorageSwitch;
@@ -14,7 +15,7 @@ public class StorageConfig {
     @Bean("fileStorageSwitch")
     public StorageSwitch fileStorageSwitch(PersonService personService,
                                            ItemRepository itemRepository,
-                                           AuthorizedPersonService authorizedService){
+                                           AuthorizedPersonService authorizedService, PersonRepository personRepository){
         var storageSwitch = new StorageSwitch();
 
         StorageCommand uploadCommand = new DBUploadCommand(personService, itemRepository, authorizedService);
@@ -28,7 +29,7 @@ public class StorageConfig {
         StorageCommand downloadCommand = new BucketDownloadCommand();
         storageSwitch.register("download", downloadCommand);
 
-        StorageCommand moveToTrashCommand = new DBRemoveCommand(itemRepository, authorizedService);
+        StorageCommand moveToTrashCommand = new DBRemoveCommand(itemRepository, personRepository, authorizedService);
         moveToTrashCommand
                 .setNext(new BucketMoveToTrashBinCommand())
                 .setNext(new BucketRemoveCommand());
@@ -43,7 +44,7 @@ public class StorageConfig {
         StorageCommand removeFromTrashCommand = new BucketRemoveFromTrashBinCommand();
         storageSwitch.register("remove_from_trash", removeFromTrashCommand);
 
-        StorageCommand renameCommand = new DBRenameCommand(itemRepository);
+        StorageCommand renameCommand = new DBRenameCommand(itemRepository, authorizedService);
         renameCommand
                 .setNext(new BucketRenameFileCommand())
                 .setNext(new BucketRenameFolderCommand())
@@ -52,6 +53,10 @@ public class StorageConfig {
 
         StorageCommand shareCommand = new DBShareCommand(itemRepository, personService);
         storageSwitch.register("share", shareCommand);
+
+        StorageCommand removeShareCommand = new DBRemoveCommand(itemRepository, personRepository, authorizedService);
+        removeShareCommand.setNext(new BucketMoveToTrashBinCommand());
+        storageSwitch.register("remove_share", removeShareCommand);
 
         return storageSwitch;
     }

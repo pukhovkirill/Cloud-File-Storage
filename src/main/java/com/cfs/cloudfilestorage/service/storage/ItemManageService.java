@@ -10,4 +10,6 @@ public interface ItemManageService extends StorageManageService{
     void undoFromTrash(StorageEntity item);
 
     void removeFromTrash(StorageEntity item);
+
+    void removeShare(StorageEntity item);
 }

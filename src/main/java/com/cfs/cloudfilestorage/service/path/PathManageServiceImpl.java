@@ -175,8 +175,16 @@ public class PathManageServiceImpl implements PathManageService, PathConvertServ
     public PathView getPathView(String path) {
         var fullPath = path;
         path = removeLastSlash(path);
+
         var parent = getParent(path);
         var workingDirectory = getFileName(path);
+
+        String root;
+        if(!path.startsWith((root = getPersonRootFolder()))){
+            parent = root+"/";
+            fullPath = parent+path;
+            workingDirectory = path;
+        }
 
         return PathView.builder()
                 .path(parent.split("/"))
