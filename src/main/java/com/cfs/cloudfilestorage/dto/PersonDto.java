@@ -1,8 +1,10 @@
 package com.cfs.cloudfilestorage.dto;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
+import com.cfs.cloudfilestorage.validator.ValidEmail;
+import com.cfs.cloudfilestorage.validator.ValidPassword;
+import com.cfs.cloudfilestorage.validator.ValidPhone;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Getter
@@ -14,18 +16,24 @@ public class PersonDto {
 
     private Long id;
 
-    @NotBlank
+    @NotNull
+    @NotEmpty
     private String firstName;
 
-    @NotBlank
+    @NotNull
+    @NotEmpty
     private String lastName;
 
-    @Email
-    @NotEmpty(message = "Email should not be empty")
+    @ValidEmail
+    @NotNull
+    @NotEmpty
     private String email;
 
+    @ValidPhone
     private String phone;
 
-    @NotEmpty(message = "Password should not be empty")
+    @ValidPassword
+    @NotNull
+    @NotEmpty
     private String password;
 }

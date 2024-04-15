@@ -17,43 +17,41 @@
 <body>
     <div class="container w-50 form-center">
         <h4 class="mb-3">Registration</h4>
-        <form th:action="@{/register}" th:method="post" th:object="${person}" class="needs-validation" novalidate="">
+        <form th:action="@{/register}" th:method="post" th:object="${person}" class="needs-validation">
             <div class="row g-3">
                 <div class="col-sm-6">
                     <label for="firstName" class="form-label">First name<span class="text-danger">*</span></label>
                     <input th:field="*{firstName}" type="text" class="form-control" id="firstName" placeholder="" value="" required="">
-                    <div class="invalid-feedback">
-                        Valid first name is required.
-                    </div>
+                    <p class="text-danger" th:each="error: ${#fields.errors('firstName')}"
+                       th:text="${error}">Validation error</p>
                 </div>
 
                 <div class="col-sm-6">
                     <label for="lastName" class="form-label">Last name<span class="text-danger">*</span></label>
                     <input th:field="*{lastName}" type="text" class="form-control" id="lastName" placeholder="" value="" required="">
-                    <div class="invalid-feedback">
-                        Valid last name is required.
-                    </div>
+                    <p class="text-danger" th:each="error : ${#fields.errors('lastName')}"
+                       th:text="${error}">Validation error</p>
                 </div>
 
                 <div class="col-12">
                     <label for="email" class="form-label">Email<span class="text-danger">*</span></label>
                     <input th:field="*{email}" type="email" class="form-control" id="email" placeholder="you@example.com">
-                    <div class="invalid-feedback">
-                        Please enter a valid email address for shipping updates.
-                    </div>
+                    <p class="text-danger" th:each="error : ${#fields.errors('email')}"
+                       th:text="${error}">Validation error</p>
                 </div>
 
                 <div class="col-12">
                     <label for="phone" class="form-label">Phone</label>
                     <input th:field="*{phone}" type="text" class="form-control" id="phone" placeholder="" required="">
-                    <div class="invalid-feedback">
-                        Please enter your shipping address.
-                    </div>
+                    <p class="text-danger" th:each="error : ${#fields.errors('phone')}"
+                       th:text="${error}">Validation error</p>
                 </div>
 
                 <div class="col-12">
                     <label for="password" class="form-label">Password<span class="text-danger">*</span></label>
                     <input th:field="*{password}" type="password" class="form-control" id="password">
+                    <p class="text-danger" th:each="error : ${#fields.errors('password')}"
+                       th:text="${error}">Validation error</p>
                 </div>
             </div>
 

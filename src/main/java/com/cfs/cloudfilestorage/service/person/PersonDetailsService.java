@@ -25,9 +25,13 @@ public class PersonDetailsService implements UserDetailsService {
         var person = personRepository.findByEmail(email);
 
         if (person != null) {
-            return new org.springframework.security.core.userdetails.User(person.getEmail(),
-                    person.getPassword(),
-                    mapRolesToAuthorities());
+            boolean enabled = true;
+            boolean accountNonExpired = true;
+            boolean credentialsNonExpired = true;
+            boolean accountNonLocked = true;
+            return new org.springframework.security.core.userdetails.User(
+                    person.getEmail(), person.getPassword(), enabled, accountNonExpired,
+                    credentialsNonExpired, accountNonLocked, mapRolesToAuthorities());
         }else{
             throw new UsernameNotFoundException("Invalid username or password.");
         }
