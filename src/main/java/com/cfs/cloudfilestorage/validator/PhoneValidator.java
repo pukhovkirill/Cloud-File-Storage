@@ -10,7 +10,9 @@ public class PhoneValidator implements ConstraintValidator<ValidPhone, String> {
     private Pattern pattern;
     private Matcher matcher;
     private static final String PHONE_PATTERN =
-            "^(\\+\\d{1,3}( )?)?((\\(\\d{3}\\))|\\d{3})[- .]?\\d{3}[- .]?\\d{4}$";
+            "^(\\+\\d{1,3}( )?)?((\\(\\d{3}\\))|\\d{3})[- .]?\\d{3}[- .]?\\d{4}$" +
+            "|^(\\+\\d{1,3}( )?)?(\\d{3} ?){2}\\d{3}$" +
+            "|^(\\+\\d{1,3}( )?)?(\\d{3} ?)(\\d{2} ?){2}\\d{2}$";
 
     @Override
     public void initialize(ValidPhone constraintAnnotation) {
