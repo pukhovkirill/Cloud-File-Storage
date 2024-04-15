@@ -1,8 +1,7 @@
 package com.cfs.cloudfilestorage.controller;
 
 import com.cfs.cloudfilestorage.model.Person;
-import com.cfs.cloudfilestorage.service.path.PathConvertService;
-import com.cfs.cloudfilestorage.service.path.PathManageService;
+import com.cfs.cloudfilestorage.service.path.*;
 import com.cfs.cloudfilestorage.service.person.AuthorizedPersonService;
 import com.cfs.cloudfilestorage.service.storage.ItemManageService;
 import lombok.Builder;
@@ -16,18 +15,24 @@ import java.math.RoundingMode;
 public class StorageBaseController {
 
     protected final ItemManageService itemManageService;
-    protected final PathManageService pathManageService;
-    protected final PathConvertService pathConvertService;
     protected final AuthorizedPersonService authorizedPersonService;
+    protected final StoragePathManageService storagePathManageService;
+    protected final PathStringRefactorService pathStringRefactorService;
+    protected final StorageContentManageService storageContentManageService;
 
-    public StorageBaseController(PathManageService pathManageService,
-                            ItemManageService itemManageService,
-                            PathConvertService pathConvertService,
-                            AuthorizedPersonService authorizedPersonService) {
+
+    public StorageBaseController(ItemManageService itemManageService,
+                                 AuthorizedPersonService authorizedPersonService,
+                                 StoragePathManageService storagePathManageService,
+                                 PathStringRefactorService pathStringRefactorService,
+                                 StorageContentManageService storageContentManageService){
+
         this.itemManageService = itemManageService;
-        this.pathManageService = pathManageService;
-        this.pathConvertService = pathConvertService;
         this.authorizedPersonService = authorizedPersonService;
+        this.storagePathManageService = storagePathManageService;
+        this.pathStringRefactorService = pathStringRefactorService;
+        this.storageContentManageService = storageContentManageService;
+
     }
 
     protected Person findPerson(){

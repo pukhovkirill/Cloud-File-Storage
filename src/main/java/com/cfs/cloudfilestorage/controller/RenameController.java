@@ -2,8 +2,7 @@ package com.cfs.cloudfilestorage.controller;
 
 import com.cfs.cloudfilestorage.dto.StorageEntity;
 import com.cfs.cloudfilestorage.model.Person;
-import com.cfs.cloudfilestorage.service.path.PathConvertService;
-import com.cfs.cloudfilestorage.service.path.PathManageService;
+import com.cfs.cloudfilestorage.service.path.*;
 import com.cfs.cloudfilestorage.service.person.AuthorizedPersonService;
 import com.cfs.cloudfilestorage.service.storage.ItemManageService;
 import org.springframework.stereotype.Controller;
@@ -17,8 +16,15 @@ import java.util.List;
 @Controller
 public class RenameController extends StorageBaseController{
 
-    public RenameController(PathManageService pathManageService, ItemManageService itemManageService, PathConvertService pathConvertService, AuthorizedPersonService authorizedPersonService) {
-        super(pathManageService, itemManageService, pathConvertService, authorizedPersonService);
+
+    public RenameController(ItemManageService itemManageService,
+                            AuthorizedPersonService authorizedPersonService,
+                            StoragePathManageService storagePathManageService,
+                            PathStringRefactorService pathStringRefactorService,
+                            StorageContentManageService storageContentManageService) {
+
+        super(itemManageService, authorizedPersonService,
+                storagePathManageService, pathStringRefactorService, storageContentManageService);
     }
 
     @PostMapping("/rename")
@@ -29,7 +35,7 @@ public class RenameController extends StorageBaseController{
         var entities = findStorageEntity(path);
 
         if(entities.length == 1){
-            path = pathConvertService.renameFile(path, name);
+            path = storagePathManageService.renameFile(path, name);
 
             if(isItemExists(path)){
                 throw new FileAlreadyExistsException("File exists");
@@ -38,7 +44,7 @@ public class RenameController extends StorageBaseController{
             itemManageService.rename(entities[0], name, path);
         }else{
             for(var entity : entities){
-                path = pathConvertService.renameFolder(entity.getPath(), path, name);
+                path = storagePathManageService.renameFolder(entity.getPath(), path, name);
 
                 if(isItemExists(path)){
                     throw new FileAlreadyExistsException("Folder exists");
@@ -58,7 +64,7 @@ public class RenameController extends StorageBaseController{
     private StorageEntity[] findStorageEntity(String path){
         var person = findPerson();
 
-        if(pathConvertService.isFolder(path)){
+        if(storagePathManageService.isFolder(path)){
             return findFolder(path, person);
         }else{
             return findFile(path, findPerson());

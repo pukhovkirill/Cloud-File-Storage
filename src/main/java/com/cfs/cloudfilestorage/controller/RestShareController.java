@@ -5,8 +5,7 @@ import com.cfs.cloudfilestorage.model.SharedItem;
 import com.cfs.cloudfilestorage.model.StorageItem;
 import com.cfs.cloudfilestorage.repository.ItemRepository;
 import com.cfs.cloudfilestorage.repository.SharedItemRepository;
-import com.cfs.cloudfilestorage.service.path.PathConvertService;
-import com.cfs.cloudfilestorage.service.path.PathManageService;
+import com.cfs.cloudfilestorage.service.path.*;
 import com.cfs.cloudfilestorage.service.person.AuthorizedPersonService;
 import com.cfs.cloudfilestorage.service.storage.ItemManageService;
 import com.cfs.cloudfilestorage.util.PropertiesUtility;
@@ -27,13 +26,15 @@ public class RestShareController extends StorageBaseController {
     private final SharedItemRepository sharedItemRepository;
 
     public RestShareController(ItemRepository itemRepository,
-                               PathManageService pathManageService,
                                ItemManageService itemManageService,
-                               PathConvertService pathConvertService,
                                SharedItemRepository sharedItemRepository,
-                               AuthorizedPersonService authorizedPersonService) {
-        super(pathManageService, itemManageService, pathConvertService, authorizedPersonService);
+                               AuthorizedPersonService authorizedPersonService,
+                               StoragePathManageService storagePathManageService,
+                               PathStringRefactorService pathStringRefactorService,
+                               StorageContentManageService storageContentManageService) {
 
+        super(itemManageService, authorizedPersonService,
+                storagePathManageService, pathStringRefactorService, storageContentManageService);
         this.itemRepository = itemRepository;
         this.sharedItemRepository = sharedItemRepository;
     }

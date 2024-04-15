@@ -3,8 +3,7 @@ package com.cfs.cloudfilestorage.controller;
 import com.cfs.cloudfilestorage.dto.PersonDto;
 import com.cfs.cloudfilestorage.dto.StorageEntity;
 import com.cfs.cloudfilestorage.model.Person;
-import com.cfs.cloudfilestorage.service.path.PathConvertService;
-import com.cfs.cloudfilestorage.service.path.PathManageService;
+import com.cfs.cloudfilestorage.service.path.*;
 import com.cfs.cloudfilestorage.service.person.AuthorizedPersonService;
 import com.cfs.cloudfilestorage.service.person.PersonService;
 import com.cfs.cloudfilestorage.service.storage.ItemManageService;
@@ -17,12 +16,16 @@ public class ProfileController extends StorageBaseController{
 
     private final PersonService personService;
 
+
     public ProfileController(PersonService personService,
-                             PathManageService pathManageService,
                              ItemManageService itemManageService,
-                             PathConvertService pathConvertService,
-                             AuthorizedPersonService authorizedPersonService) {
-        super(pathManageService, itemManageService, pathConvertService, authorizedPersonService);
+                             AuthorizedPersonService authorizedPersonService,
+                             StoragePathManageService storagePathManageService,
+                             PathStringRefactorService pathStringRefactorService,
+                             StorageContentManageService storageContentManageService) {
+
+        super(itemManageService, authorizedPersonService,
+                storagePathManageService, pathStringRefactorService, storageContentManageService);
         this.personService = personService;
     }
 

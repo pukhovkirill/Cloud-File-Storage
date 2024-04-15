@@ -2,8 +2,7 @@ package com.cfs.cloudfilestorage.controller;
 
 import com.cfs.cloudfilestorage.dto.StorageEntity;
 import com.cfs.cloudfilestorage.model.Person;
-import com.cfs.cloudfilestorage.service.path.PathConvertService;
-import com.cfs.cloudfilestorage.service.path.PathManageService;
+import com.cfs.cloudfilestorage.service.path.*;
 import com.cfs.cloudfilestorage.service.person.AuthorizedPersonService;
 import com.cfs.cloudfilestorage.service.storage.ItemManageService;
 import org.springframework.stereotype.Controller;
@@ -19,11 +18,14 @@ import java.util.Set;
 @Controller
 public class UploadController extends StorageBaseController{
 
-    public UploadController(PathManageService pathManageService,
-                            ItemManageService itemManageService,
-                            PathConvertService pathConvertService,
-                            AuthorizedPersonService authorizedPersonService) {
-        super(pathManageService, itemManageService, pathConvertService, authorizedPersonService);
+
+    public UploadController(ItemManageService itemManageService,
+                            AuthorizedPersonService authorizedPersonService,
+                            StoragePathManageService storagePathManageService,
+                            PathStringRefactorService pathStringRefactorService,
+                            StorageContentManageService storageContentManageService) {
+        super(itemManageService, authorizedPersonService,
+                storagePathManageService, pathStringRefactorService, storageContentManageService);
     }
 
     @PostMapping("/upload-files")
@@ -41,10 +43,10 @@ public class UploadController extends StorageBaseController{
     private StorageEntity[] buildFolderDtoArray(MultipartFile[] folder, String currentPath) throws IOException {
         var person = findPerson();
         var name = folder[0].getOriginalFilename();
-        var folderName = pathConvertService.getParent(name);
-        var folderPath = pathConvertService.createFileName(folderName, currentPath);
+        var folderName = pathStringRefactorService.getParent(name);
+        var folderPath = storagePathManageService.createFileName(folderName, currentPath);
 
-        folderName = pathConvertService.getCleanName(folderName);
+        folderName = pathStringRefactorService.getCleanName(folderName);
         var eFolder = StorageEntity.builder()
                 .id(null)
                 .name(folderName)
@@ -64,13 +66,13 @@ public class UploadController extends StorageBaseController{
         Set<String> subfolders = new HashSet<>();
         for (MultipartFile file : folder) {
             var name = file.getOriginalFilename();
-            var parent = pathConvertService.getParent(name);
+            var parent = pathStringRefactorService.getParent(name);
 
             if(parent.equals(uploadedFolder) || subfolders.contains(parent))
                 continue;
 
-            var folderPath = pathConvertService.createFileName(parent, currentPath);
-            var folderName = pathConvertService.getCleanName(parent);
+            var folderPath = storagePathManageService.createFileName(parent, currentPath);
+            var folderName = pathStringRefactorService.getCleanName(parent);
             var eFolder = StorageEntity.builder()
                     .id(null)
                     .name(folderName)
@@ -91,10 +93,10 @@ public class UploadController extends StorageBaseController{
 
         int count = 0;
         for(var file : folder){
-            var root = pathConvertService.getFileName(currentPath);
-            var fileName = pathConvertService.subtraction(file.getOriginalFilename(), root);
+            var root = pathStringRefactorService.getOriginalName(currentPath);
+            var fileName = pathStringRefactorService.subtraction(file.getOriginalFilename(), root);
             var filePath = currentPath+fileName;
-            fileName = pathConvertService.getFileName(fileName);
+            fileName = pathStringRefactorService.getOriginalName(fileName);
             storageEntities[count++] = buildFileDto(file, fileName, filePath);
         }
 
@@ -106,8 +108,8 @@ public class UploadController extends StorageBaseController{
 
         int count = 0;
         for(var file : files){
-            var fileName = pathConvertService.getFileName(file.getOriginalFilename());
-            var filePath = pathConvertService.createFileName(fileName, currentPath);
+            var fileName = pathStringRefactorService.getOriginalName(file.getOriginalFilename());
+            var filePath = storagePathManageService.createFileName(fileName, currentPath);
             storageEntities[count++] = buildFileDto(file, fileName, filePath);
         }
 

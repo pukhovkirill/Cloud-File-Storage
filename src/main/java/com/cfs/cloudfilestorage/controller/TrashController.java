@@ -1,8 +1,7 @@
 package com.cfs.cloudfilestorage.controller;
 
 import com.cfs.cloudfilestorage.dto.StorageEntity;
-import com.cfs.cloudfilestorage.service.path.PathConvertService;
-import com.cfs.cloudfilestorage.service.path.PathManageService;
+import com.cfs.cloudfilestorage.service.path.*;
 import com.cfs.cloudfilestorage.service.person.AuthorizedPersonService;
 import com.cfs.cloudfilestorage.service.storage.ItemManageService;
 import jakarta.servlet.http.HttpSession;
@@ -18,8 +17,15 @@ import java.util.List;
 @Controller
 public class TrashController extends StorageBaseController{
 
-    public TrashController(PathManageService pathManageService, ItemManageService itemManageService, PathConvertService pathConvertService, AuthorizedPersonService authorizedPersonService) {
-        super(pathManageService, itemManageService, pathConvertService, authorizedPersonService);
+
+    public TrashController(ItemManageService itemManageService,
+                           AuthorizedPersonService authorizedPersonService,
+                           StoragePathManageService storagePathManageService,
+                           PathStringRefactorService pathStringRefactorService,
+                           StorageContentManageService storageContentManageService) {
+
+        super(itemManageService, authorizedPersonService,
+                storagePathManageService, pathStringRefactorService, storageContentManageService);
     }
 
     @GetMapping("/trash-bin")
@@ -86,7 +92,7 @@ public class TrashController extends StorageBaseController{
     }
 
     @PostMapping("/remove-shared")
-    public String removeSharedFromTrashBin(@RequestParam("path") String path, @RequestParam("working_directory") String currentPath) throws Exception {
+    public String removeSharedFromTrashBin(@RequestParam("path") String path) throws Exception {
         var item = findStorageEntity(path);
         itemManageService.removeShare(item);
         return "redirect:/vault";

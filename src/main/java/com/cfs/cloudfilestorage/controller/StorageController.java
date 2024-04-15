@@ -1,8 +1,7 @@
 package com.cfs.cloudfilestorage.controller;
 
 import com.cfs.cloudfilestorage.aps.PathView;
-import com.cfs.cloudfilestorage.service.path.PathConvertService;
-import com.cfs.cloudfilestorage.service.path.PathManageService;
+import com.cfs.cloudfilestorage.service.path.*;
 import com.cfs.cloudfilestorage.service.person.AuthorizedPersonService;
 import com.cfs.cloudfilestorage.service.storage.ItemManageService;
 import org.springframework.stereotype.Controller;
@@ -18,11 +17,15 @@ import java.util.Map;
 @Controller
 public class StorageController extends StorageBaseController {
 
-    public StorageController(PathManageService pathManageService,
-                             ItemManageService itemManageService,
-                             PathConvertService pathConvertService,
-                             AuthorizedPersonService authorizedPersonService) {
-        super(pathManageService, itemManageService, pathConvertService, authorizedPersonService);
+
+    public StorageController(ItemManageService itemManageService,
+                             AuthorizedPersonService authorizedPersonService,
+                             StoragePathManageService storagePathManageService,
+                             PathStringRefactorService pathStringRefactorService,
+                             StorageContentManageService storageContentManageService) {
+
+        super(itemManageService, authorizedPersonService,
+                storagePathManageService, pathStringRefactorService, storageContentManageService);
     }
 
     @GetMapping("/vault")
@@ -31,10 +34,10 @@ public class StorageController extends StorageBaseController {
 
         var person = findPerson();
 
-        pathManageService.buildStoragePath(person.getAvailableItems());
-        var content = pathManageService.goToRoot();
-        var allFiles = pathManageService.getAllFiles();
-        var allFolders = pathManageService.getAllDirectory();
+        storageContentManageService.buildStoragePath(person.getAvailableItems());
+        var content = storageContentManageService.goToRoot();
+        var allFiles = storageContentManageService.getAllFiles();
+        var allFolders = storageContentManageService.getAllDirectory();
         var totalSize = computeStorageUsage(person);
         setCurrentPath("", attributes);
 
@@ -58,10 +61,10 @@ public class StorageController extends StorageBaseController {
         var person = findPerson();
 
         var decodePath = new String(Base64.getMimeDecoder().decode(path.getBytes()));
-        pathManageService.buildStoragePath(person.getAvailableItems());
-        var content = pathManageService.changeDirectory(decodePath);
-        var allFiles = pathManageService.getAllFiles();
-        var allFolders = pathManageService.getAllDirectory();
+        storageContentManageService.buildStoragePath(person.getAvailableItems());
+        var content = storageContentManageService.changeDirectory(decodePath);
+        var allFiles = storageContentManageService.getAllFiles();
+        var allFolders = storageContentManageService.getAllDirectory();
         var totalSize = computeStorageUsage(person);
         setCurrentPath(decodePath, attributes);
 
@@ -89,7 +92,7 @@ public class StorageController extends StorageBaseController {
     private String getPreviousPath(String path, int index){
         var decodePath = new String(Base64.getMimeDecoder().decode(path.getBytes()));
 
-        var pathView = pathConvertService.getPathView(decodePath);
+        var pathView = storagePathManageService.getPathView(decodePath);
         StringBuilder newPath = new StringBuilder();
 
         for(int i = 0; i <= index; i++){
@@ -108,7 +111,7 @@ public class StorageController extends StorageBaseController {
                     .fullPath("")
                     .build();
         }else{
-            pathView = pathConvertService.getPathView(currentPath);
+            pathView = storagePathManageService.getPathView(currentPath);
         }
         attributes.put("pathView", pathView);
     }

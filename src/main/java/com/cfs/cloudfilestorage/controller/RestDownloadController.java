@@ -4,8 +4,7 @@ import com.cfs.cloudfilestorage.dto.StorageEntity;
 import com.cfs.cloudfilestorage.model.Person;
 import com.cfs.cloudfilestorage.model.StorageItem;
 import com.cfs.cloudfilestorage.repository.SharedItemRepository;
-import com.cfs.cloudfilestorage.service.path.PathConvertService;
-import com.cfs.cloudfilestorage.service.path.PathManageService;
+import com.cfs.cloudfilestorage.service.path.*;
 import com.cfs.cloudfilestorage.service.person.AuthorizedPersonService;
 import com.cfs.cloudfilestorage.service.storage.ItemManageService;
 import lombok.Builder;
@@ -24,18 +23,21 @@ public class RestDownloadController extends StorageBaseController{
 
     private final SharedItemRepository sharedItemRepository;
 
-    public RestDownloadController(PathManageService pathManageService,
-                                  ItemManageService itemManageService,
-                                  PathConvertService pathConvertService,
+    public RestDownloadController(ItemManageService itemManageService,
                                   SharedItemRepository sharedItemRepository,
-                                  AuthorizedPersonService authorizedPersonService) {
-        super(pathManageService, itemManageService, pathConvertService, authorizedPersonService);
+                                  AuthorizedPersonService authorizedPersonService,
+                                  StoragePathManageService storagePathManageService,
+                                  PathStringRefactorService pathStringRefactorService,
+                                  StorageContentManageService storageContentManageService) {
+
+        super(itemManageService, authorizedPersonService,
+                storagePathManageService, pathStringRefactorService, storageContentManageService);
         this.sharedItemRepository = sharedItemRepository;
     }
 
     @RequestMapping(value = "/download", method = RequestMethod.POST)
     public @ResponseBody byte[] downloadFiles(@RequestBody List<String> request) throws IOException {
-        if(request.size() == 1 && !pathConvertService.isFolder(request.getFirst())){
+        if(request.size() == 1 && !storagePathManageService.isFolder(request.getFirst())){
             var file = findFile(request.getFirst(), findPerson());
             itemManageService.download(file);
             return fileResponse(file);
@@ -108,7 +110,7 @@ public class RestDownloadController extends StorageBaseController{
         var person = findPerson();
 
         for(var entity : entities){
-            if(pathConvertService.isFolder(entity)){
+            if(storagePathManageService.isFolder(entity)){
                 storageEntities.addAll(findFolderFiles(entity, person));
             }
             else{

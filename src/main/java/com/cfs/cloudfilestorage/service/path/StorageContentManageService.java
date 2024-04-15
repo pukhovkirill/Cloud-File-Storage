@@ -5,7 +5,7 @@ import com.cfs.cloudfilestorage.model.StorageItem;
 
 import java.util.List;
 
-public interface PathManageService {
+public interface StorageContentManageService {
 
     void buildStoragePath(List<StorageItem> files);
 
@@ -18,4 +18,5 @@ public interface PathManageService {
     List<StorageEntity> goToRoot();
 
     boolean pathExists(String path);
+
 }

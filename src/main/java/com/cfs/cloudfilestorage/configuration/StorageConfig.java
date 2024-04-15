@@ -15,7 +15,8 @@ public class StorageConfig {
     @Bean("fileStorageSwitch")
     public StorageSwitch fileStorageSwitch(PersonService personService,
                                            ItemRepository itemRepository,
-                                           AuthorizedPersonService authorizedService, PersonRepository personRepository){
+                                           PersonRepository personRepository,
+                                           AuthorizedPersonService authorizedService){
         var storageSwitch = new StorageSwitch();
 
         StorageCommand uploadCommand = new DBUploadCommand(personService, itemRepository, authorizedService);
