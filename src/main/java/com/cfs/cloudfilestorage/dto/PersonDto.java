@@ -1,5 +1,6 @@
 package com.cfs.cloudfilestorage.dto;
 
+import com.cfs.cloudfilestorage.model.Person;
 import com.cfs.cloudfilestorage.validator.ValidEmail;
 import com.cfs.cloudfilestorage.validator.ValidPassword;
 import com.cfs.cloudfilestorage.validator.ValidPhone;
@@ -36,4 +37,13 @@ public class PersonDto {
     @NotNull
     @NotEmpty
     private String password;
+
+    public PersonDto(Person person) {
+        this.id = person.getId();
+        this.firstName = person.getFirstName();
+        this.lastName = person.getLastName();
+        this.email = person.getEmail();
+        this.phone = person.getPhone();
+        this.password = person.getPassword();
+    }
 }

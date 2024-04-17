@@ -45,10 +45,10 @@ public class DBUploadCommand extends StorageCommand{
                 .ownerEmail(person.getEmail())
                 .build();
 
-        item = itemRepository.save(item);
-
-        person.getAvailableItems().add(item);
-
-        personService.updatePerson(person);
+        if(itemRepository.findByPath(item.getPath()) == null){
+            item = itemRepository.save(item);
+            person.getAvailableItems().add(item);
+            personService.updatePerson(person);
+        }
     }
 }

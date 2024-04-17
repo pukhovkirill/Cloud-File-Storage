@@ -17,7 +17,6 @@ import java.util.Map;
 @Controller
 public class StorageController extends StorageBaseController {
 
-
     public StorageController(ItemManageService itemManageService,
                              AuthorizedPersonService authorizedPersonService,
                              StoragePathManageService storagePathManageService,

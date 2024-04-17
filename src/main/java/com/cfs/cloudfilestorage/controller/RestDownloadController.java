@@ -149,7 +149,7 @@ public class RestDownloadController extends StorageBaseController{
         var sharedAccess = sharedItemRepository.findByItem(item);
 
         if(sharedAccess == null){
-            return true;
+            return false;
         }
 
         return sharedAccess.getIsShared();

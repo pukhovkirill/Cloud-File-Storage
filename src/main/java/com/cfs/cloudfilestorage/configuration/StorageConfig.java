@@ -55,7 +55,7 @@ public class StorageConfig {
         StorageCommand shareCommand = new DBShareCommand(itemRepository, personService);
         storageSwitch.register("share", shareCommand);
 
-        StorageCommand removeShareCommand = new DBRemoveCommand(itemRepository, personRepository, authorizedService);
+        StorageCommand removeShareCommand = new DBShareRemoveCommand(itemRepository, personRepository, authorizedService);
         storageSwitch.register("remove_share", removeShareCommand);
 
         StorageCommand fullRemove = new DBRemoveCommand(itemRepository, personRepository, authorizedService);

@@ -93,9 +93,27 @@ public class TrashController extends StorageBaseController{
 
     @PostMapping("/remove-shared")
     public String removeSharedFromTrashBin(@RequestParam("path") String path) throws Exception {
-        var item = findStorageEntity(path);
-        itemManageService.removeShare(item);
+        if(storagePathManageService.isFolder(path)){
+            var items = removeSharedFolder(path);
+            for(var item : items){
+                itemManageService.removeShare(item);
+            }
+        }else{
+            var item = findStorageEntity(path);
+            itemManageService.removeShare(item);
+        }
         return "redirect:/vault";
+    }
+
+    private StorageEntity[] removeSharedFolder(String path){
+        var person = findPerson();
+
+        var storageItem = person.getAvailableItems().stream()
+                .filter(x -> x.getPath().startsWith(path))
+                .dropWhile(x -> x.getContentType().equals("folder"))
+                .map(StorageEntity::new).toList();
+
+        return storageItem.toArray(new StorageEntity[0]);
     }
 
     private List<StorageEntity> findOrPersistTrashBin(HttpSession session){

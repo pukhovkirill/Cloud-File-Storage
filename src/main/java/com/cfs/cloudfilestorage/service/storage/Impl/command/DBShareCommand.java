@@ -37,9 +37,12 @@ public class DBShareCommand extends StorageCommand {
 
             var item = optItem.get();
 
-            person.getAvailableItems().add(item);
-
-            personService.updatePerson(person);
+            if(!person.getEmail().equals(item.getOwnerEmail())){
+                if(!person.getAvailableItems().contains(item)){
+                    person.getAvailableItems().add(item);
+                    personService.updatePerson(person);
+                }
+            }
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }

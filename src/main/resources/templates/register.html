@@ -42,7 +42,7 @@
 
                 <div class="col-12">
                     <label for="phone" class="form-label">Phone</label>
-                    <input th:field="*{phone}" type="text" class="form-control" id="phone" placeholder="" required="">
+                    <input th:field="*{phone}" type="text" class="form-control" id="phone" placeholder="">
                     <p class="text-danger" th:each="error : ${#fields.errors('phone')}"
                        th:text="${error}">Validation error</p>
                 </div>

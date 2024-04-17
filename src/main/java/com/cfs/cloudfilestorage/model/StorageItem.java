@@ -1,12 +1,10 @@
 package com.cfs.cloudfilestorage.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Table(name = "item")
 @Entity
@@ -24,7 +22,7 @@ public class StorageItem {
     @Column
     private String name;
 
-    @Column(name = "item_name", unique = true)
+    @Column(unique = true)
     private String path;
 
     @Column(name = "content_type", nullable = false)
@@ -38,4 +36,13 @@ public class StorageItem {
 
     @Column(name = "owner_email", nullable = false)
     private String ownerEmail;
+
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @ManyToMany(mappedBy = "availableItems")
+    private List<Person> people;
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "shared_id", referencedColumnName = "item_id")
+    private SharedItem sharedItem;
 }

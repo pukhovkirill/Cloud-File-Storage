@@ -43,6 +43,8 @@ public class StorageEntity implements Serializable {
     @NotNull
     private String owner;
 
+    private Boolean isAvailable = true;
+
     @NotEmpty
     private byte[] bytes;
 

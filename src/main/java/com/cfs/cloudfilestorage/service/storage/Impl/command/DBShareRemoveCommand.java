@@ -7,13 +7,13 @@ import com.cfs.cloudfilestorage.service.person.AuthorizedPersonService;
 import com.cfs.cloudfilestorage.service.storage.StorageCommand;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-public class DBRemoveCommand extends StorageCommand {
+public class DBShareRemoveCommand extends StorageCommand {
 
     private final ItemRepository itemRepository;
     private final PersonRepository personRepository;
     private final AuthorizedPersonService authorizedPersonService;
 
-    public DBRemoveCommand(ItemRepository itemRepository,
+    public DBShareRemoveCommand(ItemRepository itemRepository,
                            PersonRepository personRepository,
                            AuthorizedPersonService authorizedPersonService){
         this.itemRepository = itemRepository;
@@ -39,15 +39,7 @@ public class DBRemoveCommand extends StorageCommand {
 
         var item = optItem.get();
 
-        var itemUsers = item.getPeople();
-        for(var user : itemUsers){
-            user.getAvailableItems().remove(item);
-            personRepository.save(user);
-        }
-
         person.getAvailableItems().remove(item);
-
-        if(item.getOwnerEmail().equals(person.getEmail()))
-            itemRepository.delete(item);
+        personRepository.save(person);
     }
 }

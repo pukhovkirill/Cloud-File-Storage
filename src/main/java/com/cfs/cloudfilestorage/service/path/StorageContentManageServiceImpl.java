@@ -5,6 +5,7 @@ import com.cfs.cloudfilestorage.aps.AbstractPathTree;
 import com.cfs.cloudfilestorage.aps.TokenType;
 import com.cfs.cloudfilestorage.dto.StorageEntity;
 import com.cfs.cloudfilestorage.model.StorageItem;
+import com.cfs.cloudfilestorage.repository.SharedItemRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,10 +17,14 @@ public class StorageContentManageServiceImpl implements StorageContentManageServ
 
     private final PathStringRefactorService pathStrService;
 
+    private final SharedItemRepository sharedItemRepository;
+
     private APS tree;
 
-    public StorageContentManageServiceImpl(PathStringRefactorService pathStringRefactorService) {
+    public StorageContentManageServiceImpl(SharedItemRepository sharedItemRepository,
+                                           PathStringRefactorService pathStringRefactorService) {
         this.pathStrService = pathStringRefactorService;
+        this.sharedItemRepository = sharedItemRepository;
     }
 
     @Override
@@ -28,7 +33,10 @@ public class StorageContentManageServiceImpl implements StorageContentManageServ
         List<StorageEntity> entities = new ArrayList<>();
 
         for(var item : files){
+            var access = checkAvailability(item);
             var entity = new StorageEntity(item);
+            entity.setIsAvailable(access);
+
             entities.add(entity);
         }
 
@@ -91,5 +99,15 @@ public class StorageContentManageServiceImpl implements StorageContentManageServ
         }
 
         return entities;
+    }
+
+    private boolean checkAvailability(StorageItem item){
+        var sharedAccess = sharedItemRepository.findByItem(item);
+
+        if(sharedAccess == null){
+            return false;
+        }
+
+        return sharedAccess.getIsShared();
     }
 }
