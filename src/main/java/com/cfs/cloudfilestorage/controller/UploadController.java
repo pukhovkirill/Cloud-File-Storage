@@ -43,7 +43,8 @@ public class UploadController extends StorageBaseController{
     private StorageEntity[] buildFolderDtoArray(MultipartFile[] folder, String currentPath) throws IOException {
         var person = findPerson();
         var name = folder[0].getOriginalFilename();
-        var folderName = pathStringRefactorService.getParent(name);
+//        var folderName = pathStringRefactorService.getParent(name);
+        var folderName = getRootFolder(name);
         var folderPath = storagePathManageService.createFileName(folderName, currentPath);
 
         folderName = pathStringRefactorService.getCleanName(folderName);
@@ -60,6 +61,11 @@ public class UploadController extends StorageBaseController{
         itemManageService.upload(eFolder);
         findSubfolders(folder, person, currentPath, folderName+"/");
         return buildFolderFileDtoArray(folder, folderPath);
+    }
+
+    private String getRootFolder(String path){
+        var folders = path.split("/");
+        return pathStringRefactorService.addBackSlash(folders[0]);
     }
 
     private void findSubfolders(MultipartFile[] folder, Person person, String currentPath, String uploadedFolder){

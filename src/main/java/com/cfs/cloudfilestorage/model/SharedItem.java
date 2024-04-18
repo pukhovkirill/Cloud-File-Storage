@@ -1,10 +1,7 @@
 package com.cfs.cloudfilestorage.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Table(name = "shared_item")
 @Entity
@@ -16,11 +13,11 @@ public class SharedItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "item_id")
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "item_id", referencedColumnName = "id", nullable = false, unique = true)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToOne(fetch = FetchType.LAZY)
     private StorageItem item;
 
     @Column(name = "is_shared", nullable = false)

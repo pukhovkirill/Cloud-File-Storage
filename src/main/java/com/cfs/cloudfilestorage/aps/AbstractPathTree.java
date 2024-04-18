@@ -104,6 +104,9 @@ public class AbstractPathTree implements APS{
                 root = buildFoldersByPath(folderPath, entity);
             }
 
+            if(entity.getContentType().equals("folder"))
+                continue;
+
             var token = Token.builder()
                     .type(TokenType.FILE)
                     .name(entity.getName())

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -59,7 +60,8 @@ public class StorageController extends StorageBaseController {
 
         var person = findPerson();
 
-        var decodePath = new String(Base64.getMimeDecoder().decode(path.getBytes()));
+        var decodePath = new String(Base64.getDecoder().decode(path.getBytes()), StandardCharsets.UTF_8);
+        decodePath = java.net.URLDecoder.decode(decodePath, StandardCharsets.UTF_8);
         storageContentManageService.buildStoragePath(person.getAvailableItems());
         var content = storageContentManageService.changeDirectory(decodePath);
         var allFiles = storageContentManageService.getAllFiles();
@@ -83,13 +85,15 @@ public class StorageController extends StorageBaseController {
     public String showPreviousFolder(@PathVariable String path, @RequestParam("index") Integer index){
 
         var previous = getPreviousPath(path, index);
-        previous = Base64.getMimeEncoder().encodeToString(previous.getBytes());
+        previous = java.net.URLEncoder.encode(previous, StandardCharsets.UTF_8);
+        previous = new String(Base64.getEncoder().encode(previous.getBytes()), StandardCharsets.UTF_8);
 
         return String.format("redirect:/folders/%s", previous);
     }
 
     private String getPreviousPath(String path, int index){
-        var decodePath = new String(Base64.getMimeDecoder().decode(path.getBytes()));
+        var decodePath = new String(Base64.getDecoder().decode(path.getBytes()), StandardCharsets.UTF_8);
+        decodePath = java.net.URLDecoder.decode(decodePath, StandardCharsets.UTF_8);
 
         var pathView = storagePathManageService.getPathView(decodePath);
         StringBuilder newPath = new StringBuilder();

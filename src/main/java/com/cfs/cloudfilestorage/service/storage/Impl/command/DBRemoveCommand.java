@@ -45,8 +45,6 @@ public class DBRemoveCommand extends StorageCommand {
             personRepository.save(user);
         }
 
-        person.getAvailableItems().remove(item);
-
         if(item.getOwnerEmail().equals(person.getEmail()))
             itemRepository.delete(item);
     }

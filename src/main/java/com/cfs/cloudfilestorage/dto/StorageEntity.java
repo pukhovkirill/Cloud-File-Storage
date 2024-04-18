@@ -11,6 +11,7 @@ import lombok.Setter;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.util.Base64;
 
@@ -59,6 +60,7 @@ public class StorageEntity implements Serializable {
     }
 
     public String pathToBase64(){
-        return Base64.getMimeEncoder().encodeToString(this.path.getBytes());
+        var URLEncodeString = java.net.URLEncoder.encode(this.path, StandardCharsets.UTF_8);
+        return new String(Base64.getEncoder().encode(URLEncodeString.getBytes()), StandardCharsets.UTF_8);
     }
 }

@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 @Controller
@@ -85,7 +86,8 @@ public class RestShareController extends StorageBaseController {
     public String sharing(@RequestParam("source") String source) throws Exception {
         var person = findPerson();
 
-        var path = new String(Base64.getMimeDecoder().decode(source.getBytes()));
+        var path = new String(Base64.getDecoder().decode(source.getBytes()));
+        path = java.net.URLDecoder.decode(path, StandardCharsets.UTF_8);
         var item = itemRepository.findByPath(path);
         var sharedItem = sharedItemRepository.findByItem(item);
 
@@ -113,7 +115,10 @@ public class RestShareController extends StorageBaseController {
                     .item(item)
                     .isShared(data.access)
                     .build();
-            return sharedItemRepository.save(newSharedItem);
+            newSharedItem = sharedItemRepository.save(newSharedItem);
+            item.setSharedItem(newSharedItem);
+            item = itemRepository.save(item);
+            return newSharedItem;
         }
         sharedItem.setIsShared(data.access);
         return sharedItemRepository.save(sharedItem);
@@ -122,7 +127,9 @@ public class RestShareController extends StorageBaseController {
     private String buildShareLink(SharedItem item) {
         String link = PropertiesUtility.getApplicationProperty("app.server_link");
         System.out.println(item.toString());
-        link += "sharing?source="+Base64.getMimeEncoder().encodeToString(item.getItem().getPath().getBytes());
+        var path = java.net.URLEncoder.encode(item.getItem().getPath(), StandardCharsets.UTF_8);
+        path = new String(Base64.getEncoder().encode(path.getBytes()), StandardCharsets.UTF_8);
+        link += "sharing?source="+path;
         return link;
     }
 

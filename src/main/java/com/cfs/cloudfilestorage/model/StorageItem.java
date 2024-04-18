@@ -42,7 +42,8 @@ public class StorageItem {
     @ManyToMany(mappedBy = "availableItems")
     private List<Person> people;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "shared_id", referencedColumnName = "item_id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToOne(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
     private SharedItem sharedItem;
 }

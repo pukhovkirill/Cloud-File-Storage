@@ -3,6 +3,7 @@ package com.cfs.cloudfilestorage.service.path;
 import com.cfs.cloudfilestorage.aps.PathView;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.regex.Pattern;
 
@@ -30,8 +31,10 @@ public class StoragePathManageServiceImpl implements StoragePathManageService {
                 folderName = pathStrService.addBackSlash(folderName);
                 resultFolderPath = pathStrService.addRoot(folderName);
             }else{
-                if(isBase64(workingDir))
-                    workingDir = new String(Base64.getMimeDecoder().decode(workingDir.getBytes()));
+                if(isBase64(workingDir)){
+                    workingDir = new String(Base64.getDecoder().decode(workingDir.getBytes()), StandardCharsets.UTF_8);
+                    workingDir = java.net.URLDecoder.decode(workingDir, StandardCharsets.UTF_8);
+                }
                 resultFolderPath = makeFolderPath(workingDir, folderName);
             }
 
@@ -51,8 +54,11 @@ public class StoragePathManageServiceImpl implements StoragePathManageService {
             if(workingDir.equals("vault")){
                 resultFolderPath = pathStrService.addRoot(fileName);
             }else{
-                if(isBase64(workingDir))
-                    workingDir = new String(Base64.getMimeDecoder().decode(workingDir.getBytes()));
+                if(isBase64(workingDir)){
+                    workingDir = new String(Base64.getDecoder().decode(workingDir.getBytes()), StandardCharsets.UTF_8);
+                    workingDir = java.net.URLDecoder.decode(workingDir, StandardCharsets.UTF_8);
+                }
+
                 resultFolderPath = makeFilePath(workingDir, fileName);
             }
 
