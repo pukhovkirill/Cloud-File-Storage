@@ -4,6 +4,7 @@ import com.cfs.cloudfilestorage.aps.APS;
 import com.cfs.cloudfilestorage.aps.AbstractPathTree;
 import com.cfs.cloudfilestorage.aps.TokenType;
 import com.cfs.cloudfilestorage.dto.StorageEntity;
+import com.cfs.cloudfilestorage.model.SharedItem;
 import com.cfs.cloudfilestorage.model.StorageItem;
 import com.cfs.cloudfilestorage.repository.SharedItemRepository;
 import org.springframework.stereotype.Service;
@@ -105,6 +106,10 @@ public class StorageContentManageServiceImpl implements StorageContentManageServ
         var sharedAccess = sharedItemRepository.findByItem(item);
 
         if(sharedAccess == null){
+            sharedAccess = new SharedItem();
+            sharedAccess.setItem(item);
+            sharedAccess.setIsShared(false);
+            sharedItemRepository.save(sharedAccess);
             return false;
         }
 

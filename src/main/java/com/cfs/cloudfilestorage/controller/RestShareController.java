@@ -54,13 +54,15 @@ public class RestShareController extends StorageBaseController {
     }
 
     private Boolean checkAvailability(StorageItem item){
+        var currentPerson = findPerson();
         var sharedAccess = sharedItemRepository.findByItem(item);
 
         if(sharedAccess == null){
             return false;
         }
 
-        return sharedAccess.getIsShared();
+        return sharedAccess.getIsShared() ||
+                item.getOwnerEmail().equals(currentPerson.getEmail());
     }
 
     @RequestMapping(value = "/share-item", method = RequestMethod.POST)
@@ -117,7 +119,7 @@ public class RestShareController extends StorageBaseController {
                     .build();
             newSharedItem = sharedItemRepository.save(newSharedItem);
             item.setSharedItem(newSharedItem);
-            item = itemRepository.save(item);
+            itemRepository.save(item);
             return newSharedItem;
         }
         sharedItem.setIsShared(data.access);

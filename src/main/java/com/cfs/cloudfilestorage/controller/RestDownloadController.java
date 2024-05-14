@@ -146,13 +146,15 @@ public class RestDownloadController extends StorageBaseController{
     }
 
     private Boolean checkAvailability(StorageItem item){
+        var currentPerson = findPerson();
         var sharedAccess = sharedItemRepository.findByItem(item);
 
         if(sharedAccess == null){
             return false;
         }
 
-        return sharedAccess.getIsShared();
+        return sharedAccess.getIsShared() ||
+               item.getOwnerEmail().equals(currentPerson.getEmail());
     }
 
     @Getter
